@@ -1,12 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Validador de Ingressos</title>
 
@@ -43,6 +43,7 @@ h1 {
 .instrucao {
   color: #555;
   font-size: 16px;
+  line-height: 1.5;
 }
 
 #reader {
@@ -180,10 +181,13 @@ button:disabled {
 <h1>🎟️ Validar Convite</h1>
 
 <p class="instrucao">
+
 Aponte a câmera para o QR Code.
+
 <br><br>
-Depois confira o código e clique em
-<strong>VALIDAR CÓDIGO</strong>.
+
+Depois confira o código e clique em <strong>VALIDAR CÓDIGO</strong>.
+
 </p>
 
 <div id="reader"></div>
@@ -191,23 +195,24 @@ Depois confira o código e clique em
 <p>Ou digite o código:</p>
 
 <input
-  id="codigo"
-  maxlength="6"
-  autocomplete="off"
-  placeholder="ABC123"
+id="codigo"
+maxlength="6"
+autocomplete="off"
+placeholder="ABC123"
+
 >
 
 <button
-  id="botaoValidar"
-  onclick="validarDigitado()"
+id="botaoValidar"
+onclick="validarDigitado()"
+
 >
-VALIDAR CÓDIGO
-</button>
+
+VALIDAR CÓDIGO </button>
 
 <div id="resultado"></div>
 
 </div>
-
 
 <div id="popup">
 
@@ -220,29 +225,30 @@ VALIDAR CÓDIGO
 <div id="popupNome" class="popup-nome"></div>
 
 <button
-  class="botao-proximo"
-  onclick="proximoIngresso()"
+class="botao-proximo"
+onclick="proximoIngresso()"
+
 >
-PRÓXIMO INGRESSO
-</button>
+
+PRÓXIMO INGRESSO </button>
 
 <button
-  class="botao-fechar"
-  onclick="fecharPopup()"
+class="botao-fechar"
+onclick="fecharPopup()"
+
 >
-FECHAR
-</button>
+
+FECHAR </button>
 
 </div>
 
 </div>
-
 
 <script>
 
 /*
 ==========================================================
-URL DO APPS SCRIPT
+APPS SCRIPT
 ==========================================================
 */
 
@@ -261,7 +267,7 @@ let contadorCallback = 0;
 
 /*
 ==========================================================
-QR CODE FOI LIDO
+QR CODE CAPTURADO
 ==========================================================
 */
 
@@ -397,12 +403,13 @@ async function iniciarLeitor() {
       "❌ Não foi possível acessar a câmera.";
 
   }
+
 }
 
 
 /*
 ==========================================================
-VALIDAR
+BOTÃO VALIDAR
 ==========================================================
 */
 
@@ -440,7 +447,7 @@ async function validarDigitado() {
 
 /*
 ==========================================================
-CONSULTAR APPS SCRIPT
+CONSULTA AO APPS SCRIPT
 ==========================================================
 */
 
@@ -460,78 +467,80 @@ function consultarAppsScript(codigo) {
 
   botao.disabled = true;
 
+
+  /*
+   * Cria um nome único para o callback.
+   */
+
   contadorCallback++;
 
-  const nomeCallback =
+  const callback =
     "resultadoQR_" + contadorCallback;
 
-  let terminou = false;
+
+  let finalizado = false;
+
+
+  /*
+   * Elemento SCRIPT.
+   *
+   * Isso permite que o celular
+   * receba a resposta do Apps Script
+   * mesmo estando no GitHub Pages.
+   */
 
   const script =
     document.createElement("script");
 
 
+  /*
+   * Finaliza a operação.
+   */
+
   function finalizar() {
 
-    if (terminou) {
+    if (finalizado) {
       return;
     }
 
-    terminou = true;
+    finalizado = true;
 
     processando = false;
 
     botao.disabled = false;
 
-    delete window[nomeCallback];
+    delete window[callback];
 
     if (script.parentNode) {
+
       script.parentNode.removeChild(script);
+
     }
+
   }
 
 
   /*
-  ========================================================
-  RESPOSTA DO APPS SCRIPT
-  ========================================================
-  */
+   * ========================================================
+   * CALLBACK
+   * ========================================================
+   */
 
-  window[nomeCallback] =
+  window[callback] =
     function(resposta) {
 
       console.log(
-        "Resposta do Apps Script:",
+        "RESPOSTA DO APPS SCRIPT:",
         resposta
       );
 
 
-      if (!resposta) {
-
-        resultado.className =
-          "resultado invalido";
-
-        resultado.innerHTML =
-          "❌ ERRO DE COMUNICAÇÃO";
-
-        mostrarPopup(
-          "invalido",
-          "Resposta vazia do sistema."
-        );
-
-        finalizar();
-
-        return;
-      }
-
-
       /*
-      ==========================
-      VÁLIDO
-      ==========================
-      */
+       * RESPOSTA VÁLIDA
+       */
 
       if (
+        resposta &&
         resposta.status === "valido"
       ) {
 
@@ -556,12 +565,11 @@ function consultarAppsScript(codigo) {
 
 
       /*
-      ==========================
-      JÁ UTILIZADO
-      ==========================
-      */
+       * JÁ UTILIZADO
+       */
 
       if (
+        resposta &&
         resposta.status === "utilizado"
       ) {
 
@@ -586,21 +594,45 @@ function consultarAppsScript(codigo) {
 
 
       /*
-      ==========================
-      INVÁLIDO
-      ==========================
-      */
+       * INVÁLIDO
+       */
+
+      if (
+        resposta &&
+        resposta.status === "invalido"
+      ) {
+
+        resultado.className =
+          "resultado invalido";
+
+        resultado.innerHTML =
+          "❌ CÓDIGO INVÁLIDO";
+
+        mostrarPopup(
+          "invalido",
+          resposta.mensagem ||
+          "Código não encontrado."
+        );
+
+        finalizar();
+
+        return;
+      }
+
+
+      /*
+       * RESPOSTA DESCONHECIDA
+       */
 
       resultado.className =
         "resultado invalido";
 
       resultado.innerHTML =
-        "❌ CÓDIGO INVÁLIDO";
+        "❌ ERRO DE COMUNICAÇÃO";
 
       mostrarPopup(
         "invalido",
-        resposta.mensagem ||
-        "Código não encontrado."
+        "Resposta inesperada do sistema."
       );
 
       finalizar();
@@ -609,51 +641,50 @@ function consultarAppsScript(codigo) {
 
 
   /*
-  ========================================================
-  URL
-  ========================================================
-  */
+   * ========================================================
+   * MONTA A URL
+   * ========================================================
+   */
 
-  script.src =
+  const url =
     URL_APPS_SCRIPT +
     "?acao=validar" +
     "&codigo=" +
     encodeURIComponent(codigo) +
     "&callback=" +
-    nomeCallback +
+    callback +
     "&t=" +
     Date.now();
 
 
   console.log(
-    "URL enviada:",
-    script.src
+    "URL DA CONSULTA:",
+    url
   );
 
 
   /*
-  ========================================================
-  ERRO DE COMUNICAÇÃO
-  ========================================================
-  */
+   * ========================================================
+   * ERRO AO CARREGAR
+   * ========================================================
+   */
 
   script.onerror =
     function() {
 
       console.error(
-        "Erro ao carregar Apps Script."
+        "ERRO AO CARREGAR APPS SCRIPT"
       );
 
       resultado.className =
         "resultado invalido";
 
       resultado.innerHTML =
-        "❌ ERRO DE COMUNICAÇÃO<br><br>" +
-        "Não foi possível consultar o sistema.";
+        "❌ ERRO DE COMUNICAÇÃO";
 
       mostrarPopup(
         "invalido",
-        "Erro de comunicação com o sistema."
+        "Não foi possível consultar o sistema."
       );
 
       finalizar();
@@ -662,24 +693,27 @@ function consultarAppsScript(codigo) {
 
 
   /*
-  ========================================================
-  TIMEOUT
-  ========================================================
-  */
+   * ========================================================
+   * TEMPO LIMITE
+   * ========================================================
+   */
 
   setTimeout(
     function() {
 
-      if (terminou) {
+      if (finalizado) {
         return;
       }
+
+      console.error(
+        "TIMEOUT DO APPS SCRIPT"
+      );
 
       resultado.className =
         "resultado invalido";
 
       resultado.innerHTML =
-        "❌ ERRO DE COMUNICAÇÃO<br><br>" +
-        "O sistema demorou para responder.";
+        "❌ ERRO DE COMUNICAÇÃO";
 
       mostrarPopup(
         "invalido",
@@ -693,7 +727,16 @@ function consultarAppsScript(codigo) {
   );
 
 
+  /*
+   * ========================================================
+   * ENVIA A REQUISIÇÃO
+   * ========================================================
+   */
+
+  script.src = url;
+
   document.body.appendChild(script);
+
 }
 
 
@@ -770,7 +813,7 @@ function mostrarPopup(tipo, nome) {
 
 /*
 ==========================================================
-FECHAR
+FECHAR POPUP
 ==========================================================
 */
 
@@ -820,7 +863,7 @@ async function proximoIngresso() {
 
 /*
 ==========================================================
-INICIAR
+INICIAR AO ABRIR
 ==========================================================
 */
 
@@ -836,3 +879,4 @@ window.onload =
 </body>
 
 </html>
+```
