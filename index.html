@@ -5,10 +5,8 @@
 
 <meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>Validador de Ingressos</title>
 
@@ -21,238 +19,153 @@
 }
 
 body {
-
   margin: 0;
   padding: 20px;
-
   background: #f3f4f6;
-
   font-family: Arial, sans-serif;
 }
 
 .container {
-
   max-width: 450px;
-
   margin: 20px auto;
-
   background: white;
-
   padding: 25px 20px;
-
   border-radius: 20px;
-
   text-align: center;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,.12);
 }
 
 h1 {
-
   margin-top: 0;
-
   font-size: 28px;
 }
 
 .instrucao {
-
   color: #555;
-
   font-size: 16px;
 }
 
 #reader {
-
   width: 100%;
-
   margin: 20px auto;
-
   border-radius: 15px;
-
   overflow: hidden;
 }
 
 input {
-
   width: 100%;
-
   padding: 15px;
-
   font-size: 20px;
-
   text-align: center;
-
   border: 1px solid #ccc;
-
   border-radius: 10px;
-
   margin: 15px 0;
-
   text-transform: uppercase;
 }
 
 button {
-
   width: 100%;
-
   padding: 16px;
-
   border: 0;
-
   border-radius: 10px;
-
   background: #2563eb;
-
   color: white;
-
   font-size: 18px;
-
   font-weight: bold;
-
   cursor: pointer;
 }
 
 button:disabled {
-
   background: #999;
-
   cursor: not-allowed;
 }
 
 #resultado {
-
   margin-top: 20px;
 }
 
 .resultado {
-
   padding: 25px 15px;
-
   border-radius: 15px;
-
   font-size: 22px;
-
   font-weight: bold;
 }
 
 .valido {
-
   background: #dcfce7;
-
   color: #166534;
 }
 
 .utilizado,
 .invalido {
-
   background: #fee2e2;
-
   color: #991b1b;
 }
 
 .nome {
-
   font-size: 26px;
-
   margin-top: 15px;
 }
 
 #popup {
-
   position: fixed;
-
   inset: 0;
-
-  background:
-    rgba(0,0,0,.65);
-
+  background: rgba(0,0,0,.65);
   display: none;
-
   align-items: center;
-
   justify-content: center;
-
   padding: 20px;
-
   z-index: 9999;
 }
 
 .popup-caixa {
-
   width: 100%;
-
   max-width: 420px;
-
   background: white;
-
   border-radius: 25px;
-
   padding: 35px 25px;
-
   text-align: center;
-
-  box-shadow:
-    0 20px 50px rgba(0,0,0,.3);
+  box-shadow: 0 20px 50px rgba(0,0,0,.3);
 }
 
 .popup-icone {
-
   font-size: 70px;
-
   line-height: 1;
-
   margin-bottom: 15px;
 }
 
 .popup-titulo {
-
   font-size: 34px;
-
   font-weight: bold;
-
   margin-bottom: 10px;
 }
 
 .popup-nome {
-
   font-size: 26px;
-
   font-weight: bold;
-
   margin: 15px 0 25px;
 }
 
 .popup-caixa.valido {
-
   background: #dcfce7;
-
   color: #166534;
 }
 
 .popup-caixa.utilizado,
 .popup-caixa.invalido {
-
   background: #fee2e2;
-
   color: #991b1b;
 }
 
 .botao-proximo {
-
   background: #2563eb;
-
   color: white;
-
   margin-top: 10px;
 }
 
 .botao-fechar {
-
   background: #555;
-
   color: white;
-
   margin-top: 10px;
 }
 
@@ -260,31 +173,22 @@ button:disabled {
 
 </head>
 
-
 <body>
-
 
 <div class="container">
 
-
 <h1>🎟️ Validar Convite</h1>
 
-
 <p class="instrucao">
-
 Aponte a câmera para o QR Code.
-
+<br><br>
 Depois confira o código e clique em
 <strong>VALIDAR CÓDIGO</strong>.
-
 </p>
-
 
 <div id="reader"></div>
 
-
 <p>Ou digite o código:</p>
-
 
 <input
   id="codigo"
@@ -293,69 +197,41 @@ Depois confira o código e clique em
   placeholder="ABC123"
 >
 
-
 <button
   id="botaoValidar"
   onclick="validarDigitado()"
 >
-
 VALIDAR CÓDIGO
-
 </button>
 
-
 <div id="resultado"></div>
-
 
 </div>
 
 
 <div id="popup">
 
+<div id="popupCaixa" class="popup-caixa">
 
-<div
-  id="popupCaixa"
-  class="popup-caixa"
->
+<div id="popupIcone" class="popup-icone"></div>
 
+<div id="popupTitulo" class="popup-titulo"></div>
 
-<div
-  id="popupIcone"
-  class="popup-icone"
-></div>
-
-
-<div
-  id="popupTitulo"
-  class="popup-titulo"
-></div>
-
-
-<div
-  id="popupNome"
-  class="popup-nome"
-></div>
-
+<div id="popupNome" class="popup-nome"></div>
 
 <button
   class="botao-proximo"
   onclick="proximoIngresso()"
 >
-
 PRÓXIMO INGRESSO
-
 </button>
-
 
 <button
   class="botao-fechar"
   onclick="fecharPopup()"
 >
-
 FECHAR
-
 </button>
-
 
 </div>
 
@@ -364,12 +240,11 @@ FECHAR
 
 <script>
 
-
 /*
- * ==========================================================
- * URL DO APPS SCRIPT
- * ==========================================================
- */
+==========================================================
+URL DO APPS SCRIPT
+==========================================================
+*/
 
 const URL_APPS_SCRIPT =
 "https://script.google.com/macros/s/AKfycby15Iu1jTxjPSeoSbAcoCV7iLIb8Wl3t5pttRWnuOrYo6N5T-mIKkre99JrjjiSNFh3/exec";
@@ -379,89 +254,55 @@ let leitor = null;
 
 let cameraLigada = false;
 
-let codigoCapturado = "";
-
 let processando = false;
 
 let contadorCallback = 0;
 
 
 /*
- * ==========================================================
- * QR CODE FOI LIDO
- * ==========================================================
- *
- * IMPORTANTE:
- *
- * Aqui NÃO valida automaticamente.
- *
- * Apenas coloca o código no campo.
- *
- */
+==========================================================
+QR CODE FOI LIDO
+==========================================================
+*/
 
 async function qrCodeLido(codigo) {
-
 
   if (processando) {
     return;
   }
 
-
-  codigoCapturado =
+  codigo =
     String(codigo)
       .trim()
       .toUpperCase();
 
-
-  document
-    .getElementById("codigo")
-    .value =
-      codigoCapturado;
-
-
-  /*
-   * Para a câmera depois de
-   * capturar o QR.
-   */
+  document.getElementById("codigo").value = codigo;
 
   await pararLeitor();
-
 
   const resultado =
     document.getElementById("resultado");
 
-
-  resultado.className =
-    "resultado";
-
+  resultado.className = "resultado";
 
   resultado.innerHTML =
     "📷 QR Code capturado.<br><br>" +
     "Confira o código e clique em<br>" +
     "<strong>VALIDAR CÓDIGO</strong>";
-
-
 }
 
 
 /*
- * ==========================================================
- * PARAR CÂMERA
- * ==========================================================
- */
+==========================================================
+PARAR CÂMERA
+==========================================================
+*/
 
 async function pararLeitor() {
 
-
-  if (
-    !leitor ||
-    !cameraLigada
-  ) {
-
+  if (!leitor || !cameraLigada) {
     return;
-
   }
-
 
   try {
 
@@ -476,36 +317,29 @@ async function pararLeitor() {
 
   }
 
-
   cameraLigada = false;
-
 }
 
 
 /*
- * ==========================================================
- * INICIAR CÂMERA
- * ==========================================================
- */
+==========================================================
+INICIAR CÂMERA
+==========================================================
+*/
 
 async function iniciarLeitor() {
-
 
   if (cameraLigada) {
     return;
   }
 
-
   const elemento =
     document.getElementById("reader");
 
-
   elemento.innerHTML = "";
-
 
   leitor =
     new Html5Qrcode("reader");
-
 
   const configuracao = {
 
@@ -520,9 +354,7 @@ async function iniciarLeitor() {
 
   };
 
-
   try {
-
 
     await leitor.start(
 
@@ -532,172 +364,141 @@ async function iniciarLeitor() {
 
       configuracao,
 
-
       function(codigoLido) {
 
-        qrCodeLido(
-          codigoLido
-        );
+        qrCodeLido(codigoLido);
 
       },
 
-
       function(erro) {
 
-        /*
-         * Erros normais de leitura
-         * são ignorados.
-         */
+        // Erros normais de leitura são ignorados.
 
       }
 
     );
 
-
     cameraLigada = true;
 
-
   } catch (erro) {
-
 
     console.log(
       "Erro ao iniciar câmera:",
       erro
     );
 
-
     const resultado =
-      document.getElementById(
-        "resultado"
-      );
-
+      document.getElementById("resultado");
 
     resultado.className =
       "resultado invalido";
-
 
     resultado.innerHTML =
       "❌ Não foi possível acessar a câmera.";
 
   }
-
 }
 
 
 /*
- * ==========================================================
- * VALIDAR CÓDIGO DIGITADO OU CAPTURADO
- * ==========================================================
- */
+==========================================================
+VALIDAR
+==========================================================
+*/
 
 async function validarDigitado() {
-
 
   if (processando) {
     return;
   }
 
-
   const campo =
-    document.getElementById(
-      "codigo"
-    );
-
+    document.getElementById("codigo");
 
   const codigo =
     campo.value
       .trim()
       .toUpperCase();
 
-
   if (!codigo) {
-
 
     mostrarPopup(
       "invalido",
       "Digite ou leia um código."
     );
 
-
     return;
-
   }
-
 
   processando = true;
 
-
   await pararLeitor();
 
-
-  validarCodigo(
-    codigo
-  );
-
+  consultarAppsScript(codigo);
 }
 
 
 /*
- * ==========================================================
- * CONSULTA O APPS SCRIPT
- * ==========================================================
- */
+==========================================================
+CONSULTAR APPS SCRIPT
+==========================================================
+*/
 
-function validarCodigo(codigo) {
-
+function consultarAppsScript(codigo) {
 
   const resultado =
-    document.getElementById(
-      "resultado"
-    );
-
+    document.getElementById("resultado");
 
   const botao =
-    document.getElementById(
-      "botaoValidar"
-    );
-
+    document.getElementById("botaoValidar");
 
   resultado.className =
     "resultado";
 
-
   resultado.innerHTML =
     "🔎 Consultando o sistema...";
 
-
   botao.disabled = true;
-
 
   contadorCallback++;
 
-
   const nomeCallback =
-    "resultadoQR_" +
-    contadorCallback;
+    "resultadoQR_" + contadorCallback;
 
+  let terminou = false;
 
-  let finalizado = false;
+  const script =
+    document.createElement("script");
 
 
   function finalizar() {
 
-    if (finalizado) {
+    if (terminou) {
       return;
     }
 
-    finalizado = true;
+    terminou = true;
 
     processando = false;
 
     botao.disabled = false;
 
+    delete window[nomeCallback];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
   }
 
 
+  /*
+  ========================================================
+  RESPOSTA DO APPS SCRIPT
+  ========================================================
+  */
+
   window[nomeCallback] =
     function(resposta) {
-
 
       console.log(
         "Resposta do Apps Script:",
@@ -705,15 +506,37 @@ function validarCodigo(codigo) {
       );
 
 
-      if (
-        resposta.status ===
-        "valido"
-      ) {
+      if (!resposta) {
 
+        resultado.className =
+          "resultado invalido";
+
+        resultado.innerHTML =
+          "❌ ERRO DE COMUNICAÇÃO";
+
+        mostrarPopup(
+          "invalido",
+          "Resposta vazia do sistema."
+        );
+
+        finalizar();
+
+        return;
+      }
+
+
+      /*
+      ==========================
+      VÁLIDO
+      ==========================
+      */
+
+      if (
+        resposta.status === "valido"
+      ) {
 
         resultado.className =
           "resultado valido";
-
 
         resultado.innerHTML =
           "✅ CÓDIGO VÁLIDO" +
@@ -721,24 +544,29 @@ function validarCodigo(codigo) {
           (resposta.nome || "") +
           "</div>";
 
-
         mostrarPopup(
           "valido",
-          resposta.nome
+          resposta.nome || ""
         );
 
+        finalizar();
 
+        return;
       }
 
-      else if (
-        resposta.status ===
-        "utilizado"
-      ) {
 
+      /*
+      ==========================
+      JÁ UTILIZADO
+      ==========================
+      */
+
+      if (
+        resposta.status === "utilizado"
+      ) {
 
         resultado.className =
           "resultado utilizado";
-
 
         resultado.innerHTML =
           "⚠️ CÓDIGO JÁ UTILIZADO" +
@@ -746,60 +574,45 @@ function validarCodigo(codigo) {
           (resposta.nome || "") +
           "</div>";
 
-
         mostrarPopup(
           "utilizado",
-          resposta.nome
+          resposta.nome || ""
         );
 
+        finalizar();
 
-      }
-
-      else {
-
-
-        resultado.className =
-          "resultado invalido";
-
-
-        resultado.innerHTML =
-          "❌ CÓDIGO INVÁLIDO";
-
-
-        mostrarPopup(
-          "invalido",
-          resposta.mensagem ||
-          "Código não encontrado."
-        );
-
+        return;
       }
 
 
-      delete window[
-        nomeCallback
-      ];
+      /*
+      ==========================
+      INVÁLIDO
+      ==========================
+      */
 
+      resultado.className =
+        "resultado invalido";
 
-      if (
-        script.parentNode
-      ) {
+      resultado.innerHTML =
+        "❌ CÓDIGO INVÁLIDO";
 
-        script.parentNode
-          .removeChild(script);
-
-      }
-
+      mostrarPopup(
+        "invalido",
+        resposta.mensagem ||
+        "Código não encontrado."
+      );
 
       finalizar();
 
     };
 
 
-  const script =
-    document.createElement(
-      "script"
-    );
-
+  /*
+  ========================================================
+  URL
+  ========================================================
+  */
 
   script.src =
     URL_APPS_SCRIPT +
@@ -812,240 +625,204 @@ function validarCodigo(codigo) {
     Date.now();
 
 
+  console.log(
+    "URL enviada:",
+    script.src
+  );
+
+
+  /*
+  ========================================================
+  ERRO DE COMUNICAÇÃO
+  ========================================================
+  */
+
   script.onerror =
     function() {
 
-
       console.error(
-        "Erro ao consultar Apps Script."
+        "Erro ao carregar Apps Script."
       );
-
 
       resultado.className =
         "resultado invalido";
 
-
       resultado.innerHTML =
         "❌ ERRO DE COMUNICAÇÃO<br><br>" +
         "Não foi possível consultar o sistema.";
-
 
       mostrarPopup(
         "invalido",
         "Erro de comunicação com o sistema."
       );
 
-
-      delete window[
-        nomeCallback
-      ];
-
-
-      if (
-        script.parentNode
-      ) {
-
-        script.parentNode
-          .removeChild(script);
-
-      }
-
-
       finalizar();
 
     };
 
 
-  document.body.appendChild(
-    script
+  /*
+  ========================================================
+  TIMEOUT
+  ========================================================
+  */
+
+  setTimeout(
+    function() {
+
+      if (terminou) {
+        return;
+      }
+
+      resultado.className =
+        "resultado invalido";
+
+      resultado.innerHTML =
+        "❌ ERRO DE COMUNICAÇÃO<br><br>" +
+        "O sistema demorou para responder.";
+
+      mostrarPopup(
+        "invalido",
+        "O sistema demorou para responder."
+      );
+
+      finalizar();
+
+    },
+    15000
   );
 
+
+  document.body.appendChild(script);
 }
 
 
 /*
- * ==========================================================
- * POPUP
- * ==========================================================
- */
+==========================================================
+POPUP
+==========================================================
+*/
 
-function mostrarPopup(
-  tipo,
-  nome
-) {
-
+function mostrarPopup(tipo, nome) {
 
   const popup =
-    document.getElementById(
-      "popup"
-    );
-
+    document.getElementById("popup");
 
   const caixa =
-    document.getElementById(
-      "popupCaixa"
-    );
-
+    document.getElementById("popupCaixa");
 
   const icone =
-    document.getElementById(
-      "popupIcone"
-    );
-
+    document.getElementById("popupIcone");
 
   const titulo =
-    document.getElementById(
-      "popupTitulo"
-    );
-
+    document.getElementById("popupTitulo");
 
   const nomeElemento =
-    document.getElementById(
-      "popupNome"
-    );
+    document.getElementById("popupNome");
 
 
   caixa.className =
-    "popup-caixa " +
-    tipo;
+    "popup-caixa " + tipo;
 
 
-  if (
-    tipo === "valido"
-  ) {
+  if (tipo === "valido") {
 
-
-    icone.innerHTML =
-      "✅";
-
+    icone.innerHTML = "✅";
 
     titulo.innerHTML =
       "CÓDIGO VÁLIDO";
 
-
     nomeElemento.innerHTML =
       nome || "";
 
-
   }
 
-  else if (
-    tipo === "utilizado"
-  ) {
 
+  else if (tipo === "utilizado") {
 
-    icone.innerHTML =
-      "⚠️";
-
+    icone.innerHTML = "⚠️";
 
     titulo.innerHTML =
       "JÁ UTILIZADO";
 
-
     nomeElemento.innerHTML =
       nome || "";
 
-
   }
+
 
   else {
 
-
-    icone.innerHTML =
-      "❌";
-
+    icone.innerHTML = "❌";
 
     titulo.innerHTML =
       "NÃO FOI VALIDADO";
 
-
     nomeElemento.innerHTML =
       nome || "";
 
   }
 
 
-  popup.style.display =
-    "flex";
-
+  popup.style.display = "flex";
 }
 
 
 /*
- * ==========================================================
- * FECHAR POPUP
- * ==========================================================
- */
+==========================================================
+FECHAR
+==========================================================
+*/
 
 function fecharPopup() {
 
-
   document
     .getElementById("popup")
-    .style.display =
-      "none";
-
+    .style.display = "none";
 
   processando = false;
 
-
   document
-    .getElementById(
-      "botaoValidar"
-    )
+    .getElementById("botaoValidar")
     .disabled = false;
-
 }
 
 
 /*
- * ==========================================================
- * PRÓXIMO INGRESSO
- * ==========================================================
- */
+==========================================================
+PRÓXIMO INGRESSO
+==========================================================
+*/
 
 async function proximoIngresso() {
 
-
   document
     .getElementById("popup")
-    .style.display =
-      "none";
-
+    .style.display = "none";
 
   document
     .getElementById("codigo")
     .value = "";
 
-
   document
     .getElementById("resultado")
     .innerHTML = "";
 
-
-  codigoCapturado = "";
-
-
   processando = false;
 
-
   document
-    .getElementById(
-      "botaoValidar"
-    )
+    .getElementById("botaoValidar")
     .disabled = false;
 
-
   await iniciarLeitor();
-
 }
 
 
 /*
- * ==========================================================
- * INICIA AO ABRIR A PÁGINA
- * ==========================================================
- */
+==========================================================
+INICIAR
+==========================================================
+*/
 
 window.onload =
   function() {
@@ -1053,7 +830,6 @@ window.onload =
     iniciarLeitor();
 
   };
-
 
 </script>
 
