@@ -1,189 +1,262 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-  <title>Validador de Ingressos</title>
+<title>Validador de Ingressos</title>
 
-  <!-- Biblioteca para leitura de QR Code -->
-  <script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
 
-  <style>
+<style>
 
-    * {
-      box-sizing: border-box;
-    }
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      padding: 20px;
-      background: #f3f4f6;
-      font-family: Arial, sans-serif;
-    }
+body {
 
-    .container {
-      max-width: 450px;
-      margin: 20px auto;
-      background: white;
-      padding: 25px 20px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,.12);
-    }
+  margin: 0;
+  padding: 20px;
 
-    h1 {
-      margin-top: 0;
-      font-size: 28px;
-    }
+  background: #f3f4f6;
 
-    .instrucao {
-      color: #555;
-      font-size: 16px;
-    }
+  font-family: Arial, sans-serif;
+}
 
-    #reader {
-      width: 100%;
-      margin: 20px auto;
-      border-radius: 15px;
-      overflow: hidden;
-    }
+.container {
 
-    input {
-      width: 100%;
-      padding: 15px;
-      font-size: 20px;
-      text-align: center;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin: 15px 0;
-      text-transform: uppercase;
-    }
+  max-width: 450px;
 
-    button {
-      width: 100%;
-      padding: 16px;
-      border: 0;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+  margin: 20px auto;
 
-    button:disabled {
-      background: #999;
-      cursor: not-allowed;
-    }
+  background: white;
 
-    #resultado {
-      margin-top: 20px;
-    }
+  padding: 25px 20px;
 
-    .resultado {
-      padding: 25px 15px;
-      border-radius: 15px;
-      font-size: 22px;
-      font-weight: bold;
-    }
+  border-radius: 20px;
 
-    .valido {
-      background: #dcfce7;
-      color: #166534;
-    }
+  text-align: center;
 
-    .utilizado,
-    .invalido {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.12);
+}
 
-    .nome {
-      font-size: 26px;
-      margin-top: 15px;
-    }
+h1 {
 
-    .oculto {
-      display: none;
-    }
+  margin-top: 0;
 
+  font-size: 28px;
+}
 
-    /* ==================================================
-       POPUP
-       ================================================== */
+.instrucao {
 
-    #popup {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.65);
+  color: #555;
 
-      display: none;
+  font-size: 16px;
+}
 
-      align-items: center;
-      justify-content: center;
+#reader {
 
-      padding: 20px;
+  width: 100%;
 
-      z-index: 9999;
-    }
+  margin: 20px auto;
 
-    .popup-caixa {
-      width: 100%;
-      max-width: 420px;
+  border-radius: 15px;
 
-      background: white;
+  overflow: hidden;
+}
 
-      border-radius: 25px;
+input {
 
-      padding: 35px 25px;
+  width: 100%;
 
-      text-align: center;
+  padding: 15px;
 
-      box-shadow: 0 20px 50px rgba(0,0,0,.3);
-    }
+  font-size: 20px;
 
-    .popup-icone {
-      font-size: 70px;
-      line-height: 1;
-      margin-bottom: 15px;
-    }
+  text-align: center;
 
-    .popup-titulo {
-      font-size: 34px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+  border: 1px solid #ccc;
 
-    .popup-nome {
-      font-size: 26px;
-      font-weight: bold;
-      margin: 15px 0 25px;
-    }
+  border-radius: 10px;
 
-    .popup-caixa.valido {
-      background: #dcfce7;
-      color: #166534;
-    }
+  margin: 15px 0;
 
-    .popup-caixa.utilizado,
-    .popup-caixa.invalido {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+  text-transform: uppercase;
+}
 
-    .botao-proximo {
-      background: #2563eb;
-      color: white;
-      margin-top: 10px;
-    }
+button {
 
-  </style>
+  width: 100%;
+
+  padding: 16px;
+
+  border: 0;
+
+  border-radius: 10px;
+
+  background: #2563eb;
+
+  color: white;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+button:disabled {
+
+  background: #999;
+
+  cursor: not-allowed;
+}
+
+#resultado {
+
+  margin-top: 20px;
+}
+
+.resultado {
+
+  padding: 25px 15px;
+
+  border-radius: 15px;
+
+  font-size: 22px;
+
+  font-weight: bold;
+}
+
+.valido {
+
+  background: #dcfce7;
+
+  color: #166534;
+}
+
+.utilizado,
+.invalido {
+
+  background: #fee2e2;
+
+  color: #991b1b;
+}
+
+.nome {
+
+  font-size: 26px;
+
+  margin-top: 15px;
+}
+
+#popup {
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,.65);
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+}
+
+.popup-caixa {
+
+  width: 100%;
+
+  max-width: 420px;
+
+  background: white;
+
+  border-radius: 25px;
+
+  padding: 35px 25px;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.3);
+}
+
+.popup-icone {
+
+  font-size: 70px;
+
+  line-height: 1;
+
+  margin-bottom: 15px;
+}
+
+.popup-titulo {
+
+  font-size: 34px;
+
+  font-weight: bold;
+
+  margin-bottom: 10px;
+}
+
+.popup-nome {
+
+  font-size: 26px;
+
+  font-weight: bold;
+
+  margin: 15px 0 25px;
+}
+
+.popup-caixa.valido {
+
+  background: #dcfce7;
+
+  color: #166534;
+}
+
+.popup-caixa.utilizado,
+.popup-caixa.invalido {
+
+  background: #fee2e2;
+
+  color: #991b1b;
+}
+
+.botao-proximo {
+
+  background: #2563eb;
+
+  color: white;
+
+  margin-top: 10px;
+}
+
+.botao-fechar {
+
+  background: #555;
+
+  color: white;
+
+  margin-top: 10px;
+}
+
+</style>
 
 </head>
 
@@ -193,252 +266,200 @@
 
 <div class="container">
 
-  <h1>🎟️ Validar Convite</h1>
 
-  <p class="instrucao">
-    Aponte a câmera para o QR Code do ingresso.
-  </p>
+<h1>🎟️ Validar Convite</h1>
 
 
-  <!-- Leitor da câmera -->
-  <div id="reader"></div>
+<p class="instrucao">
+
+Aponte a câmera para o QR Code.
+
+Depois confira o código e clique em
+<strong>VALIDAR CÓDIGO</strong>.
+
+</p>
 
 
-  <p>Ou digite o código:</p>
+<div id="reader"></div>
 
 
-  <input
-    id="codigo"
-    maxlength="6"
-    autocomplete="off"
-    placeholder="ABC123">
+<p>Ou digite o código:</p>
 
 
-  <button
-    id="botaoValidar"
-    onclick="validarDigitado()">
+<input
+  id="codigo"
+  maxlength="6"
+  autocomplete="off"
+  placeholder="ABC123"
+>
 
-    VALIDAR CÓDIGO
 
-  </button>
+<button
+  id="botaoValidar"
+  onclick="validarDigitado()"
+>
+
+VALIDAR CÓDIGO
+
+</button>
 
 
-  <div id="resultado"></div>
+<div id="resultado"></div>
+
 
 </div>
 
-
-
-<!-- ==================================================
-     POPUP DO RESULTADO
-     ================================================== -->
 
 <div id="popup">
 
-  <div id="popupCaixa"
-       class="popup-caixa">
 
-    <div id="popupIcone"
-         class="popup-icone">
-    </div>
-
-
-    <div id="popupTitulo"
-         class="popup-titulo">
-    </div>
+<div
+  id="popupCaixa"
+  class="popup-caixa"
+>
 
 
-    <div id="popupNome"
-         class="popup-nome">
-    </div>
+<div
+  id="popupIcone"
+  class="popup-icone"
+></div>
 
 
-    <button
-      class="botao-proximo"
-      onclick="proximoIngresso()">
+<div
+  id="popupTitulo"
+  class="popup-titulo"
+></div>
 
-      PRÓXIMO INGRESSO
 
-    </button>
+<div
+  id="popupNome"
+  class="popup-nome"
+></div>
 
-  </div>
+
+<button
+  class="botao-proximo"
+  onclick="proximoIngresso()"
+>
+
+PRÓXIMO INGRESSO
+
+</button>
+
+
+<button
+  class="botao-fechar"
+  onclick="fecharPopup()"
+>
+
+FECHAR
+
+</button>
+
 
 </div>
 
+</div>
 
 
 <script>
 
 
-/* ==================================================
-   CONFIGURAÇÃO
-   ================================================== */
+/*
+ * ==========================================================
+ * URL DO APPS SCRIPT
+ * ==========================================================
+ */
 
 const URL_APPS_SCRIPT =
-  "https://script.google.com/macros/s/AKfycby15Iu1jTxjPSeoSbAcoCV7iLIb8Wl3t5pttRWnuOrYo6N5T-mIKkre99JrjjiSNFh3/exec";
+"https://script.google.com/macros/s/AKfycby15Iu1jTxjPSeoSbAcoCV7iLIb8Wl3t5pttRWnuOrYo6N5T-mIKkre99JrjjiSNFh3/exec";
 
 
 let leitor = null;
 
 let cameraLigada = false;
 
+let codigoCapturado = "";
+
 let processando = false;
 
 let contadorCallback = 0;
 
 
-
-/* ==================================================
-   MOSTRAR POPUP
-   ================================================== */
-
-function mostrarPopup(tipo, nome) {
-
-  const popup =
-    document.getElementById("popup");
-
-  const caixa =
-    document.getElementById("popupCaixa");
-
-  const icone =
-    document.getElementById("popupIcone");
-
-  const titulo =
-    document.getElementById("popupTitulo");
-
-  const nomeElemento =
-    document.getElementById("popupNome");
-
-
-  caixa.className =
-    "popup-caixa " + tipo;
-
-
-  if (tipo === "valido") {
-
-    icone.innerHTML = "✅";
-
-    titulo.innerHTML =
-      "CÓDIGO VÁLIDO";
-
-    nomeElemento.innerHTML =
-      nome || "";
-
-  }
-
-
-  else if (tipo === "utilizado") {
-
-    icone.innerHTML = "⚠️";
-
-    titulo.innerHTML =
-      "JÁ UTILIZADO";
-
-    nomeElemento.innerHTML =
-      nome || "";
-
-  }
-
-
-  else {
-
-    icone.innerHTML = "❌";
-
-    titulo.innerHTML =
-      "CÓDIGO INVÁLIDO";
-
-    nomeElemento.innerHTML =
-      "";
-
-  }
-
-
-  popup.style.display =
-    "flex";
-}
-
-
-
-/* ==================================================
-   FECHAR POPUP E LIGAR CÂMERA NOVAMENTE
-   ================================================== */
-
-async function proximoIngresso() {
-
-  document.getElementById("popup")
-    .style.display = "none";
-
-
-  document.getElementById("codigo")
-    .value = "";
-
-
-  document.getElementById("resultado")
-    .innerHTML = "";
-
-
-  processando = false;
-
-
-  await iniciarLeitor();
-}
-
-
-
-/* ==================================================
-   QUANDO O QR CODE FOR LIDO
-   ================================================== */
+/*
+ * ==========================================================
+ * QR CODE FOI LIDO
+ * ==========================================================
+ *
+ * IMPORTANTE:
+ *
+ * Aqui NÃO valida automaticamente.
+ *
+ * Apenas coloca o código no campo.
+ *
+ */
 
 async function qrCodeLido(codigo) {
 
-  /*
-   * Impede que o mesmo QR seja
-   * processado várias vezes.
-   */
 
   if (processando) {
     return;
   }
 
 
-  processando = true;
+  codigoCapturado =
+    String(codigo)
+      .trim()
+      .toUpperCase();
+
+
+  document
+    .getElementById("codigo")
+    .value =
+      codigoCapturado;
 
 
   /*
-   * Coloca o código no campo.
-   */
-
-  document.getElementById("codigo")
-    .value = codigo;
-
-
-  /*
-   * PARA A CÂMERA IMEDIATAMENTE.
-   *
-   * Assim o QR não fica sendo
-   * lido várias vezes.
+   * Para a câmera depois de
+   * capturar o QR.
    */
 
   await pararLeitor();
 
 
-  /*
-   * Agora consulta o sistema.
-   */
+  const resultado =
+    document.getElementById("resultado");
 
-  validarCodigo(codigo);
+
+  resultado.className =
+    "resultado";
+
+
+  resultado.innerHTML =
+    "📷 QR Code capturado.<br><br>" +
+    "Confira o código e clique em<br>" +
+    "<strong>VALIDAR CÓDIGO</strong>";
+
+
 }
 
 
-
-/* ==================================================
-   PARAR CÂMERA
-   ================================================== */
+/*
+ * ==========================================================
+ * PARAR CÂMERA
+ * ==========================================================
+ */
 
 async function pararLeitor() {
 
-  if (!leitor || !cameraLigada) {
+
+  if (
+    !leitor ||
+    !cameraLigada
+  ) {
+
     return;
+
   }
 
 
@@ -446,9 +467,7 @@ async function pararLeitor() {
 
     await leitor.stop();
 
-  }
-
-  catch (erro) {
+  } catch (erro) {
 
     console.log(
       "Erro ao parar câmera:",
@@ -459,286 +478,18 @@ async function pararLeitor() {
 
 
   cameraLigada = false;
-}
-
-
-
-/* ==================================================
-   VALIDAÇÃO
-   ================================================== */
-
-function validarCodigo(codigo) {
-
-  const resultado =
-    document.getElementById("resultado");
-
-
-  codigo =
-    String(codigo)
-      .trim()
-      .toUpperCase();
-
-
-  if (!codigo) {
-
-    resultado.className =
-      "resultado invalido";
-
-    resultado.innerHTML =
-      "Digite um código.";
-
-    processando = false;
-
-    return;
-  }
-
-
-  resultado.className =
-    "resultado";
-
-  resultado.innerHTML =
-    "🔎 Consultando...";
-
-
-  /*
-   * Cria um nome exclusivo para
-   * a função de retorno.
-   */
-
-  contadorCallback++;
-
-
-  const nomeCallback =
-    "resultadoQR_" + contadorCallback;
-
-
-  /*
-   * Função que receberá a resposta
-   * do Google Apps Script.
-   */
-
-  window[nomeCallback] =
-    function(resposta) {
-
-
-      /*
-       * CÓDIGO VÁLIDO
-       */
-
-      if (resposta.status === "valido") {
-
-        resultado.className =
-          "resultado valido";
-
-        resultado.innerHTML =
-          "✅ CÓDIGO VÁLIDO" +
-          '<div class="nome">' +
-          (resposta.nome || "") +
-          "</div>";
-
-
-        mostrarPopup(
-          "valido",
-          resposta.nome
-        );
-
-      }
-
-
-      /*
-       * JÁ UTILIZADO
-       */
-
-      else if (
-        resposta.status === "utilizado"
-      ) {
-
-        resultado.className =
-          "resultado utilizado";
-
-        resultado.innerHTML =
-          "⚠️ CÓDIGO JÁ UTILIZADO" +
-          '<div class="nome">' +
-          (resposta.nome || "") +
-          "</div>";
-
-
-        mostrarPopup(
-          "utilizado",
-          resposta.nome
-        );
-
-      }
-
-
-      /*
-       * INVÁLIDO
-       */
-
-      else {
-
-        resultado.className =
-          "resultado invalido";
-
-        resultado.innerHTML =
-          "❌ CÓDIGO INVÁLIDO";
-
-
-        mostrarPopup(
-          "invalido",
-          ""
-        );
-
-      }
-
-
-      /*
-       * Remove a função temporária.
-       */
-
-      delete window[nomeCallback];
-
-
-      if (script.parentNode) {
-
-        script.parentNode
-          .removeChild(script);
-
-      }
-
-    };
-
-
-  /*
-   * Cria a chamada para o Apps Script.
-   */
-
-  const script =
-    document.createElement("script");
-
-
-  script.src =
-    URL_APPS_SCRIPT +
-    "?acao=validar" +
-    "&codigo=" +
-    encodeURIComponent(codigo) +
-    "&callback=" +
-    nomeCallback +
-    "&t=" +
-    Date.now();
-
-
-  /*
-   * Se o celular não conseguir
-   * carregar a resposta.
-   */
-
-  script.onerror =
-    function() {
-
-      resultado.className =
-        "resultado invalido";
-
-      resultado.innerHTML =
-        "❌ Erro ao consultar o sistema.";
-
-
-      /*
-       * Mostra também o erro
-       * de forma grande.
-       */
-
-      mostrarPopup(
-        "invalido",
-        "Erro ao consultar o sistema"
-      );
-
-
-      processando = false;
-
-
-      delete window[nomeCallback];
-
-
-      if (script.parentNode) {
-
-        script.parentNode
-          .removeChild(script);
-
-      }
-
-    };
-
-
-  /*
-   * Envia a solicitação.
-   */
-
-  document.body.appendChild(script);
 
 }
 
 
-
-/* ==================================================
-   VALIDAÇÃO DIGITADA
-   ================================================== */
-
-async function validarDigitado() {
-
-  if (processando) {
-    return;
-  }
-
-
-  const campo =
-    document.getElementById("codigo");
-
-
-  const codigo =
-    campo.value
-      .trim()
-      .toUpperCase();
-
-
-  if (!codigo) {
-
-    mostrarPopup(
-      "invalido",
-      "Digite um código."
-    );
-
-    return;
-  }
-
-
-  processando = true;
-
-
-  /*
-   * Se a câmera estiver ligada,
-   * para antes da validação.
-   */
-
-  await pararLeitor();
-
-
-  validarCodigo(codigo);
-
-}
-
-
-
-/* ==================================================
-   INICIAR LEITOR
-   ================================================== */
+/*
+ * ==========================================================
+ * INICIAR CÂMERA
+ * ==========================================================
+ */
 
 async function iniciarLeitor() {
 
-  /*
-   * Se já estiver funcionando,
-   * não cria outro leitor.
-   */
 
   if (cameraLigada) {
     return;
@@ -772,6 +523,7 @@ async function iniciarLeitor() {
 
   try {
 
+
     await leitor.start(
 
       {
@@ -783,7 +535,9 @@ async function iniciarLeitor() {
 
       function(codigoLido) {
 
-        qrCodeLido(codigoLido);
+        qrCodeLido(
+          codigoLido
+        );
 
       },
 
@@ -802,10 +556,9 @@ async function iniciarLeitor() {
 
     cameraLigada = true;
 
-  }
 
+  } catch (erro) {
 
-  catch (erro) {
 
     console.log(
       "Erro ao iniciar câmera:",
@@ -814,7 +567,9 @@ async function iniciarLeitor() {
 
 
     const resultado =
-      document.getElementById("resultado");
+      document.getElementById(
+        "resultado"
+      );
 
 
     resultado.className =
@@ -829,10 +584,468 @@ async function iniciarLeitor() {
 }
 
 
+/*
+ * ==========================================================
+ * VALIDAR CÓDIGO DIGITADO OU CAPTURADO
+ * ==========================================================
+ */
 
-/* ==================================================
-   INICIAR QUANDO A PÁGINA CARREGAR
-   ================================================== */
+async function validarDigitado() {
+
+
+  if (processando) {
+    return;
+  }
+
+
+  const campo =
+    document.getElementById(
+      "codigo"
+    );
+
+
+  const codigo =
+    campo.value
+      .trim()
+      .toUpperCase();
+
+
+  if (!codigo) {
+
+
+    mostrarPopup(
+      "invalido",
+      "Digite ou leia um código."
+    );
+
+
+    return;
+
+  }
+
+
+  processando = true;
+
+
+  await pararLeitor();
+
+
+  validarCodigo(
+    codigo
+  );
+
+}
+
+
+/*
+ * ==========================================================
+ * CONSULTA O APPS SCRIPT
+ * ==========================================================
+ */
+
+function validarCodigo(codigo) {
+
+
+  const resultado =
+    document.getElementById(
+      "resultado"
+    );
+
+
+  const botao =
+    document.getElementById(
+      "botaoValidar"
+    );
+
+
+  resultado.className =
+    "resultado";
+
+
+  resultado.innerHTML =
+    "🔎 Consultando o sistema...";
+
+
+  botao.disabled = true;
+
+
+  contadorCallback++;
+
+
+  const nomeCallback =
+    "resultadoQR_" +
+    contadorCallback;
+
+
+  let finalizado = false;
+
+
+  function finalizar() {
+
+    if (finalizado) {
+      return;
+    }
+
+    finalizado = true;
+
+    processando = false;
+
+    botao.disabled = false;
+
+  }
+
+
+  window[nomeCallback] =
+    function(resposta) {
+
+
+      console.log(
+        "Resposta do Apps Script:",
+        resposta
+      );
+
+
+      if (
+        resposta.status ===
+        "valido"
+      ) {
+
+
+        resultado.className =
+          "resultado valido";
+
+
+        resultado.innerHTML =
+          "✅ CÓDIGO VÁLIDO" +
+          '<div class="nome">' +
+          (resposta.nome || "") +
+          "</div>";
+
+
+        mostrarPopup(
+          "valido",
+          resposta.nome
+        );
+
+
+      }
+
+      else if (
+        resposta.status ===
+        "utilizado"
+      ) {
+
+
+        resultado.className =
+          "resultado utilizado";
+
+
+        resultado.innerHTML =
+          "⚠️ CÓDIGO JÁ UTILIZADO" +
+          '<div class="nome">' +
+          (resposta.nome || "") +
+          "</div>";
+
+
+        mostrarPopup(
+          "utilizado",
+          resposta.nome
+        );
+
+
+      }
+
+      else {
+
+
+        resultado.className =
+          "resultado invalido";
+
+
+        resultado.innerHTML =
+          "❌ CÓDIGO INVÁLIDO";
+
+
+        mostrarPopup(
+          "invalido",
+          resposta.mensagem ||
+          "Código não encontrado."
+        );
+
+      }
+
+
+      delete window[
+        nomeCallback
+      ];
+
+
+      if (
+        script.parentNode
+      ) {
+
+        script.parentNode
+          .removeChild(script);
+
+      }
+
+
+      finalizar();
+
+    };
+
+
+  const script =
+    document.createElement(
+      "script"
+    );
+
+
+  script.src =
+    URL_APPS_SCRIPT +
+    "?acao=validar" +
+    "&codigo=" +
+    encodeURIComponent(codigo) +
+    "&callback=" +
+    nomeCallback +
+    "&t=" +
+    Date.now();
+
+
+  script.onerror =
+    function() {
+
+
+      console.error(
+        "Erro ao consultar Apps Script."
+      );
+
+
+      resultado.className =
+        "resultado invalido";
+
+
+      resultado.innerHTML =
+        "❌ ERRO DE COMUNICAÇÃO<br><br>" +
+        "Não foi possível consultar o sistema.";
+
+
+      mostrarPopup(
+        "invalido",
+        "Erro de comunicação com o sistema."
+      );
+
+
+      delete window[
+        nomeCallback
+      ];
+
+
+      if (
+        script.parentNode
+      ) {
+
+        script.parentNode
+          .removeChild(script);
+
+      }
+
+
+      finalizar();
+
+    };
+
+
+  document.body.appendChild(
+    script
+  );
+
+}
+
+
+/*
+ * ==========================================================
+ * POPUP
+ * ==========================================================
+ */
+
+function mostrarPopup(
+  tipo,
+  nome
+) {
+
+
+  const popup =
+    document.getElementById(
+      "popup"
+    );
+
+
+  const caixa =
+    document.getElementById(
+      "popupCaixa"
+    );
+
+
+  const icone =
+    document.getElementById(
+      "popupIcone"
+    );
+
+
+  const titulo =
+    document.getElementById(
+      "popupTitulo"
+    );
+
+
+  const nomeElemento =
+    document.getElementById(
+      "popupNome"
+    );
+
+
+  caixa.className =
+    "popup-caixa " +
+    tipo;
+
+
+  if (
+    tipo === "valido"
+  ) {
+
+
+    icone.innerHTML =
+      "✅";
+
+
+    titulo.innerHTML =
+      "CÓDIGO VÁLIDO";
+
+
+    nomeElemento.innerHTML =
+      nome || "";
+
+
+  }
+
+  else if (
+    tipo === "utilizado"
+  ) {
+
+
+    icone.innerHTML =
+      "⚠️";
+
+
+    titulo.innerHTML =
+      "JÁ UTILIZADO";
+
+
+    nomeElemento.innerHTML =
+      nome || "";
+
+
+  }
+
+  else {
+
+
+    icone.innerHTML =
+      "❌";
+
+
+    titulo.innerHTML =
+      "NÃO FOI VALIDADO";
+
+
+    nomeElemento.innerHTML =
+      nome || "";
+
+  }
+
+
+  popup.style.display =
+    "flex";
+
+}
+
+
+/*
+ * ==========================================================
+ * FECHAR POPUP
+ * ==========================================================
+ */
+
+function fecharPopup() {
+
+
+  document
+    .getElementById("popup")
+    .style.display =
+      "none";
+
+
+  processando = false;
+
+
+  document
+    .getElementById(
+      "botaoValidar"
+    )
+    .disabled = false;
+
+}
+
+
+/*
+ * ==========================================================
+ * PRÓXIMO INGRESSO
+ * ==========================================================
+ */
+
+async function proximoIngresso() {
+
+
+  document
+    .getElementById("popup")
+    .style.display =
+      "none";
+
+
+  document
+    .getElementById("codigo")
+    .value = "";
+
+
+  document
+    .getElementById("resultado")
+    .innerHTML = "";
+
+
+  codigoCapturado = "";
+
+
+  processando = false;
+
+
+  document
+    .getElementById(
+      "botaoValidar"
+    )
+    .disabled = false;
+
+
+  await iniciarLeitor();
+
+}
+
+
+/*
+ * ==========================================================
+ * INICIA AO ABRIR A PÁGINA
+ * ==========================================================
+ */
 
 window.onload =
   function() {
@@ -844,8 +1057,6 @@ window.onload =
 
 </script>
 
-
 </body>
 
 </html>
-```
