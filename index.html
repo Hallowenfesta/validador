@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Validar Convite</title>
+
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f3f4f6;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 450px;
+      margin: 20px auto;
+      background: white;
+      padding: 25px 20px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    #reader {
+      width: 100%;
+      margin: 20px auto;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      font-size: 20px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin: 15px 0;
+      box-sizing: border-box;
+      text-transform: uppercase;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #999;
+    }
+
+    .resultado {
+      margin-top: 25px;
+      padding: 25px 15px;
+      border-radius: 15px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .valido {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .utilizado,
+    .invalido {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .nome {
+      font-size: 26px;
+      margin-top: 15px;
+    }
+
+    .instrucao {
+      color: #555;
+      font-size: 16px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>🎟️ Validar Convite</h1>
+
+  <p class="instrucao">
+    Aponte a câmera para o QR Code do ingresso.
+  </p>
+
+  <div id="reader"></div>
+
+  <p>Ou digite o código:</p>
+
+  <input
+    id="codigo"
+    maxlength="6"
+    autocomplete="off"
+    placeholder="ABC123">
+
+  <button onclick="validarDigitado()">
+    VALIDAR CÓDIGO
+  </button>
+
+  <div id="resultado"></div>
+
+</div>
+
+
+<script>
+
+const URL_APPS_SCRIPT =
+  "https://script.google.com/macros/s/AKfycby15Iu1jTxjPSeoSbAcoCV7iLIb8Wl3t5pttRWnuOrYo6N5T-mIKkre99JrjjiSNFh3/exec";
+
+let processando = false;
+let contadorCallback = 0;
+
+
+/*
+ * Quando o QR Code for lido
+ */
+function qrCodeLido(codigo) {
+
+  if (processando) {
+    return;
+  }
+
+  processando = true;
+
+  document.getElementById("codigo").value = codigo;
+
+  validarCodigo(codigo);
+}
+
+
+/*
+ * Validação
+ */
+function validarCodigo(codigo) {
+
+  const resultado =
+    document.getElementById("resultado");
+
+  codigo =
+    String(codigo).trim().toUpperCase();
+
+  if (!codigo) {
+
+    resultado.className =
+      "resultado invalido";
+
+    resultado.innerHTML =
+      "Digite um código.";
+
+    processando = false;
+
+    return;
+  }
+
+  resultado.className =
+    "resultado";
+
+  resultado.innerHTML =
+    "🔎 Consultando...";
+
+
+  /*
+   * JSONP
+   *
+   * Usamos JSONP porque o GitHub Pages
+   * e o Google Apps Script estão em
+   * domínios diferentes.
+   */
+
+  contadorCallback++;
+
+  const nomeCallback =
+    "resultadoQR_" + contadorCallback;
+
+
+  window[nomeCallback] = function(resposta) {
+
+    if (resposta.status === "valido") {
+
+      resultado.className =
+        "resultado valido";
+
+      resultado.innerHTML =
+        "✅ CÓDIGO VÁLIDO" +
+        '<div class="nome">' +
+        resposta.nome +
+        "</div>";
+
+    }
+
+    else if (resposta.status === "utilizado") {
+
+      resultado.className =
+        "resultado utilizado";
+
+      resultado.innerHTML =
+        "⚠️ CÓDIGO JÁ UTILIZADO" +
+        '<div class="nome">' +
+        resposta.nome +
+        "</div>";
+
+    }
+
+    else {
+
+      resultado.className =
+        "resultado invalido";
+
+      resultado.innerHTML =
+        "❌ CÓDIGO INVÁLIDO";
+
+    }
+
+
+    setTimeout(function() {
+
+      processando = false;
+
+    }, 2000);
+
+
+    delete window[nomeCallback];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+  };
+
+
+  const script =
+    document.createElement("script");
+
+
+  script.src =
+    URL_APPS_SCRIPT +
+    "?acao=validar" +
+    "&codigo=" +
+    encodeURIComponent(codigo) +
+    "&callback=" +
+    nomeCallback;
+
+
+  script.onerror = function() {
+
+    resultado.className =
+      "resultado invalido";
+
+    resultado.innerHTML =
+      "❌ Erro ao consultar o sistema.";
+
+    processando = false;
+
+    delete window[nomeCallback];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+  };
+
+
+  document.body.appendChild(script);
+
+}
+
+
+/*
+ * Validação digitada
+ */
+function validarDigitado() {
+
+  const campo =
+    document.getElementById("codigo");
+
+  const codigo =
+    campo.value.trim().toUpperCase();
+
+  validarCodigo(codigo);
+}
+
+
+/*
+ * Inicializa câmera
+ */
+function iniciarLeitor() {
+
+  const leitor =
+    new Html5Qrcode("reader");
+
+  const configuracao = {
+
+    fps: 10,
+
+    qrbox: {
+      width: 250,
+      height: 250
+    }
+
+  };
+
+
+  leitor.start(
+
+    {
+      facingMode: "environment"
+    },
+
+    configuracao,
+
+    function(codigoLido) {
+
+      qrCodeLido(codigoLido);
+
+    },
+
+    function(erro) {
+
+      // Ignora erros normais
+      // durante a procura do QR Code
+
+    }
+
+  ).catch(function(erro) {
+
+    const resultado =
+      document.getElementById("resultado");
+
+    resultado.className =
+      "resultado invalido";
+
+    resultado.innerHTML =
+      "❌ Não foi possível acessar a câmera.";
+
+  });
+
+}
+
+
+/*
+ * Inicia quando carregar
+ */
+window.onload = function() {
+
+  iniciarLeitor();
+
+};
+
+</script>
+
+</body>
+
+</html>
