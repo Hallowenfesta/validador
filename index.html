@@ -1,5 +1,5 @@
+```html
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
@@ -42,15 +42,14 @@ h1 {
 
 .instrucao {
   color: #555;
-  font-size: 16px;
   line-height: 1.5;
 }
 
 #reader {
   width: 100%;
   margin: 20px auto;
-  border-radius: 15px;
   overflow: hidden;
+  border-radius: 15px;
 }
 
 input {
@@ -73,12 +72,10 @@ button {
   color: white;
   font-size: 18px;
   font-weight: bold;
-  cursor: pointer;
 }
 
 button:disabled {
   background: #999;
-  cursor: not-allowed;
 }
 
 #resultado {
@@ -86,7 +83,7 @@ button:disabled {
 }
 
 .resultado {
-  padding: 25px 15px;
+  padding: 20px 15px;
   border-radius: 15px;
   font-size: 22px;
   font-weight: bold;
@@ -126,19 +123,16 @@ button:disabled {
   border-radius: 25px;
   padding: 35px 25px;
   text-align: center;
-  box-shadow: 0 20px 50px rgba(0,0,0,.3);
 }
 
 .popup-icone {
   font-size: 70px;
-  line-height: 1;
-  margin-bottom: 15px;
 }
 
 .popup-titulo {
-  font-size: 34px;
+  font-size: 32px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin: 15px 0;
 }
 
 .popup-nome {
@@ -160,13 +154,11 @@ button:disabled {
 
 .botao-proximo {
   background: #2563eb;
-  color: white;
   margin-top: 10px;
 }
 
 .botao-fechar {
   background: #555;
-  color: white;
   margin-top: 10px;
 }
 
@@ -176,18 +168,16 @@ button:disabled {
 
 <body>
 
+
 <div class="container">
 
 <h1>🎟️ Validar Convite</h1>
 
 <p class="instrucao">
-
 Aponte a câmera para o QR Code.
-
 <br><br>
-
-Depois confira o código e clique em <strong>VALIDAR CÓDIGO</strong>.
-
+Depois confira o código e clique em
+<strong>VALIDAR CÓDIGO</strong>.
 </p>
 
 <div id="reader"></div>
@@ -195,688 +185,25 @@ Depois confira o código e clique em <strong>VALIDAR CÓDIGO</strong>.
 <p>Ou digite o código:</p>
 
 <input
-id="codigo"
-maxlength="6"
-autocomplete="off"
-placeholder="ABC123"
-
+  id="codigo"
+  maxlength="6"
+  autocomplete="off"
+  placeholder="ABC123"
 >
 
 <button
-id="botaoValidar"
-onclick="validarDigitado()"
-
+  id="botaoValidar"
+  onclick="validarCodigo()"
 >
-
-VALIDAR CÓDIGO </button>
+VALIDAR CÓDIGO
+</button>
 
 <div id="resultado"></div>
 
 </div>
 
+
 <div id="popup">
 
-<div id="popupCaixa" class="popup-caixa">
-
-<div id="popupIcone" class="popup-icone"></div>
-
-<div id="popupTitulo" class="popup-titulo"></div>
-
-<div id="popupNome" class="popup-nome"></div>
-
-<button
-class="botao-proximo"
-onclick="proximoIngresso()"
-
->
-
-PRÓXIMO INGRESSO </button>
-
-<button
-class="botao-fechar"
-onclick="fecharPopup()"
-
->
-
-FECHAR </button>
-
-</div>
-
-</div>
-
-<script>
-
-/*
-==========================================================
-APPS SCRIPT
-==========================================================
-*/
-
-const URL_APPS_SCRIPT =
-"https://script.google.com/macros/s/AKfycby15Iu1jTxjPSeoSbAcoCV7iLIb8Wl3t5pttRWnuOrYo6N5T-mIKkre99JrjjiSNFh3/exec";
-
-
-let leitor = null;
-
-let cameraLigada = false;
-
-let processando = false;
-
-let contadorCallback = 0;
-
-
-/*
-==========================================================
-QR CODE CAPTURADO
-==========================================================
-*/
-
-async function qrCodeLido(codigo) {
-
-  if (processando) {
-    return;
-  }
-
-  codigo =
-    String(codigo)
-      .trim()
-      .toUpperCase();
-
-  document.getElementById("codigo").value = codigo;
-
-  await pararLeitor();
-
-  const resultado =
-    document.getElementById("resultado");
-
-  resultado.className = "resultado";
-
-  resultado.innerHTML =
-    "📷 QR Code capturado.<br><br>" +
-    "Confira o código e clique em<br>" +
-    "<strong>VALIDAR CÓDIGO</strong>";
-}
-
-
-/*
-==========================================================
-PARAR CÂMERA
-==========================================================
-*/
-
-async function pararLeitor() {
-
-  if (!leitor || !cameraLigada) {
-    return;
-  }
-
-  try {
-
-    await leitor.stop();
-
-  } catch (erro) {
-
-    console.log(
-      "Erro ao parar câmera:",
-      erro
-    );
-
-  }
-
-  cameraLigada = false;
-}
-
-
-/*
-==========================================================
-INICIAR CÂMERA
-==========================================================
-*/
-
-async function iniciarLeitor() {
-
-  if (cameraLigada) {
-    return;
-  }
-
-  const elemento =
-    document.getElementById("reader");
-
-  elemento.innerHTML = "";
-
-  leitor =
-    new Html5Qrcode("reader");
-
-  const configuracao = {
-
-    fps: 10,
-
-    qrbox: {
-      width: 250,
-      height: 250
-    },
-
-    aspectRatio: 1.0
-
-  };
-
-  try {
-
-    await leitor.start(
-
-      {
-        facingMode: "environment"
-      },
-
-      configuracao,
-
-      function(codigoLido) {
-
-        qrCodeLido(codigoLido);
-
-      },
-
-      function(erro) {
-
-        // Erros normais de leitura são ignorados.
-
-      }
-
-    );
-
-    cameraLigada = true;
-
-  } catch (erro) {
-
-    console.log(
-      "Erro ao iniciar câmera:",
-      erro
-    );
-
-    const resultado =
-      document.getElementById("resultado");
-
-    resultado.className =
-      "resultado invalido";
-
-    resultado.innerHTML =
-      "❌ Não foi possível acessar a câmera.";
-
-  }
-
-}
-
-
-/*
-==========================================================
-BOTÃO VALIDAR
-==========================================================
-*/
-
-async function validarDigitado() {
-
-  if (processando) {
-    return;
-  }
-
-  const campo =
-    document.getElementById("codigo");
-
-  const codigo =
-    campo.value
-      .trim()
-      .toUpperCase();
-
-  if (!codigo) {
-
-    mostrarPopup(
-      "invalido",
-      "Digite ou leia um código."
-    );
-
-    return;
-  }
-
-  processando = true;
-
-  await pararLeitor();
-
-  consultarAppsScript(codigo);
-}
-
-
-/*
-==========================================================
-CONSULTA AO APPS SCRIPT
-==========================================================
-*/
-
-function consultarAppsScript(codigo) {
-
-  const resultado =
-    document.getElementById("resultado");
-
-  const botao =
-    document.getElementById("botaoValidar");
-
-  resultado.className =
-    "resultado";
-
-  resultado.innerHTML =
-    "🔎 Consultando o sistema...";
-
-  botao.disabled = true;
-
-
-  /*
-   * Cria um nome único para o callback.
-   */
-
-  contadorCallback++;
-
-  const callback =
-    "resultadoQR_" + contadorCallback;
-
-
-  let finalizado = false;
-
-
-  /*
-   * Elemento SCRIPT.
-   *
-   * Isso permite que o celular
-   * receba a resposta do Apps Script
-   * mesmo estando no GitHub Pages.
-   */
-
-  const script =
-    document.createElement("script");
-
-
-  /*
-   * Finaliza a operação.
-   */
-
-  function finalizar() {
-
-    if (finalizado) {
-      return;
-    }
-
-    finalizado = true;
-
-    processando = false;
-
-    botao.disabled = false;
-
-    delete window[callback];
-
-    if (script.parentNode) {
-
-      script.parentNode.removeChild(script);
-
-    }
-
-  }
-
-
-  /*
-   * ========================================================
-   * CALLBACK
-   * ========================================================
-   */
-
-  window[callback] =
-    function(resposta) {
-
-      console.log(
-        "RESPOSTA DO APPS SCRIPT:",
-        resposta
-      );
-
-
-      /*
-       * RESPOSTA VÁLIDA
-       */
-
-      if (
-        resposta &&
-        resposta.status === "valido"
-      ) {
-
-        resultado.className =
-          "resultado valido";
-
-        resultado.innerHTML =
-          "✅ CÓDIGO VÁLIDO" +
-          '<div class="nome">' +
-          (resposta.nome || "") +
-          "</div>";
-
-        mostrarPopup(
-          "valido",
-          resposta.nome || ""
-        );
-
-        finalizar();
-
-        return;
-      }
-
-
-      /*
-       * JÁ UTILIZADO
-       */
-
-      if (
-        resposta &&
-        resposta.status === "utilizado"
-      ) {
-
-        resultado.className =
-          "resultado utilizado";
-
-        resultado.innerHTML =
-          "⚠️ CÓDIGO JÁ UTILIZADO" +
-          '<div class="nome">' +
-          (resposta.nome || "") +
-          "</div>";
-
-        mostrarPopup(
-          "utilizado",
-          resposta.nome || ""
-        );
-
-        finalizar();
-
-        return;
-      }
-
-
-      /*
-       * INVÁLIDO
-       */
-
-      if (
-        resposta &&
-        resposta.status === "invalido"
-      ) {
-
-        resultado.className =
-          "resultado invalido";
-
-        resultado.innerHTML =
-          "❌ CÓDIGO INVÁLIDO";
-
-        mostrarPopup(
-          "invalido",
-          resposta.mensagem ||
-          "Código não encontrado."
-        );
-
-        finalizar();
-
-        return;
-      }
-
-
-      /*
-       * RESPOSTA DESCONHECIDA
-       */
-
-      resultado.className =
-        "resultado invalido";
-
-      resultado.innerHTML =
-        "❌ ERRO DE COMUNICAÇÃO";
-
-      mostrarPopup(
-        "invalido",
-        "Resposta inesperada do sistema."
-      );
-
-      finalizar();
-
-    };
-
-
-  /*
-   * ========================================================
-   * MONTA A URL
-   * ========================================================
-   */
-
-  const url =
-    URL_APPS_SCRIPT +
-    "?acao=validar" +
-    "&codigo=" +
-    encodeURIComponent(codigo) +
-    "&callback=" +
-    callback +
-    "&t=" +
-    Date.now();
-
-
-  console.log(
-    "URL DA CONSULTA:",
-    url
-  );
-
-
-  /*
-   * ========================================================
-   * ERRO AO CARREGAR
-   * ========================================================
-   */
-
-  script.onerror =
-    function() {
-
-      console.error(
-        "ERRO AO CARREGAR APPS SCRIPT"
-      );
-
-      resultado.className =
-        "resultado invalido";
-
-      resultado.innerHTML =
-        "❌ ERRO DE COMUNICAÇÃO";
-
-      mostrarPopup(
-        "invalido",
-        "Não foi possível consultar o sistema."
-      );
-
-      finalizar();
-
-    };
-
-
-  /*
-   * ========================================================
-   * TEMPO LIMITE
-   * ========================================================
-   */
-
-  setTimeout(
-    function() {
-
-      if (finalizado) {
-        return;
-      }
-
-      console.error(
-        "TIMEOUT DO APPS SCRIPT"
-      );
-
-      resultado.className =
-        "resultado invalido";
-
-      resultado.innerHTML =
-        "❌ ERRO DE COMUNICAÇÃO";
-
-      mostrarPopup(
-        "invalido",
-        "O sistema demorou para responder."
-      );
-
-      finalizar();
-
-    },
-    15000
-  );
-
-
-  /*
-   * ========================================================
-   * ENVIA A REQUISIÇÃO
-   * ========================================================
-   */
-
-  script.src = url;
-
-  document.body.appendChild(script);
-
-}
-
-
-/*
-==========================================================
-POPUP
-==========================================================
-*/
-
-function mostrarPopup(tipo, nome) {
-
-  const popup =
-    document.getElementById("popup");
-
-  const caixa =
-    document.getElementById("popupCaixa");
-
-  const icone =
-    document.getElementById("popupIcone");
-
-  const titulo =
-    document.getElementById("popupTitulo");
-
-  const nomeElemento =
-    document.getElementById("popupNome");
-
-
-  caixa.className =
-    "popup-caixa " + tipo;
-
-
-  if (tipo === "valido") {
-
-    icone.innerHTML = "✅";
-
-    titulo.innerHTML =
-      "CÓDIGO VÁLIDO";
-
-    nomeElemento.innerHTML =
-      nome || "";
-
-  }
-
-
-  else if (tipo === "utilizado") {
-
-    icone.innerHTML = "⚠️";
-
-    titulo.innerHTML =
-      "JÁ UTILIZADO";
-
-    nomeElemento.innerHTML =
-      nome || "";
-
-  }
-
-
-  else {
-
-    icone.innerHTML = "❌";
-
-    titulo.innerHTML =
-      "NÃO FOI VALIDADO";
-
-    nomeElemento.innerHTML =
-      nome || "";
-
-  }
-
-
-  popup.style.display = "flex";
-}
-
-
-/*
-==========================================================
-FECHAR POPUP
-==========================================================
-*/
-
-function fecharPopup() {
-
-  document
-    .getElementById("popup")
-    .style.display = "none";
-
-  processando = false;
-
-  document
-    .getElementById("botaoValidar")
-    .disabled = false;
-}
-
-
-/*
-==========================================================
-PRÓXIMO INGRESSO
-==========================================================
-*/
-
-async function proximoIngresso() {
-
-  document
-    .getElementById("popup")
-    .style.display = "none";
-
-  document
-    .getElementById("codigo")
-    .value = "";
-
-  document
-    .getElementById("resultado")
-    .innerHTML = "";
-
-  processando = false;
-
-  document
-    .getElementById("botaoValidar")
-    .disabled = false;
-
-  await iniciarLeitor();
-}
-
-
-/*
-==========================================================
-INICIAR AO ABRIR
-==========================================================
-*/
-
-window.onload =
-  function() {
-
-    iniciarLeitor();
-
-  };
-
-</script>
-
-</body>
-
-</html>
+<div
 ```
