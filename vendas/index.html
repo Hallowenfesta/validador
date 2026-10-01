@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -90,10 +89,7 @@
       margin-top: 20px;
       border: none;
       border-radius: 10px;
-
-      /* COR DO BOTÃO */
       background: #111827;
-
       color: white;
       font-size: 18px;
       font-weight: bold;
@@ -102,6 +98,11 @@
 
     .botao-comprar:hover {
       opacity: .9;
+    }
+
+    .botao-comprar:disabled {
+      opacity: .6;
+      cursor: not-allowed;
     }
 
     .total {
@@ -114,43 +115,83 @@
       margin-top: 15px;
       color: #777;
       font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .erro {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 10px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: 14px;
+    }
+
+    .processando {
+      display: none;
+      margin-top: 15px;
+      color: #555;
+      font-size: 14px;
     }
 
   </style>
 
 </head>
 
+
 <body>
+
 
   <div class="container">
 
-    <h1>NOITE DO HORROR</h1>
+
+    <h1>
+      NOITE DO HORROR
+    </h1>
+
 
     <div class="evento">
       Garanta seu ingresso
     </div>
 
 
+    <!-- ========================================= -->
+    <!-- LOTE ATUAL -->
+    <!-- ========================================= -->
+
     <div class="lote">
 
-      <h2>PRÉ-VENDA</h2>
+      <h2>
+        PRÉ-VENDA
+      </h2>
 
       <div class="preco">
-        R$ 35,00
+        R$ 30,00
       </div>
 
       <div class="disponiveis">
-        35 ingressos disponíveis
+        30 ingressos disponíveis
       </div>
 
     </div>
 
 
+    <!-- ========================================= -->
+    <!-- DADOS DO COMPRADOR -->
+    <!-- ========================================= -->
+
     <div class="lote">
 
-      <h2>Dados do comprador</h2>
+      <h2>
+        Dados do comprador
+      </h2>
+
 
       <form id="formulario">
+
+
+        <!-- NOME -->
 
         <label for="nome">
           Nome completo
@@ -160,9 +201,12 @@
           type="text"
           id="nome"
           placeholder="Digite seu nome"
+          autocomplete="name"
           required
         >
 
+
+        <!-- TELEFONE -->
 
         <label for="telefone">
           Telefone
@@ -172,9 +216,473 @@
           type="tel"
           id="telefone"
           placeholder="(00) 00000-0000"
+          autocomplete="tel"
           required
         >
 
 
-        <label fo
-```
+        <!-- CPF -->
+
+        <label for="cpf">
+          CPF
+        </label>
+
+        <input
+          type="text"
+          id="cpf"
+          placeholder="000.000.000-00"
+          autocomplete="off"
+          required
+        >
+
+
+        <!-- EMAIL -->
+
+        <label for="email">
+          E-mail
+        </label>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="seuemail@email.com"
+          autocomplete="email"
+          required
+        >
+
+
+        <!-- QUANTIDADE -->
+
+        <label for="quantidade">
+          Quantidade de ingressos
+        </label>
+
+        <select
+          id="quantidade"
+          required
+        >
+
+          <option value="1">
+            1 ingresso
+          </option>
+
+          <option value="2">
+            2 ingressos
+          </option>
+
+          <option value="3">
+            3 ingressos
+          </option>
+
+          <option value="4">
+            4 ingressos
+          </option>
+
+          <option value="5">
+            5 ingressos
+          </option>
+
+        </select>
+
+
+        <!-- TOTAL -->
+
+        <div
+          class="total"
+          id="total"
+        >
+          Total: R$ 30,00
+        </div>
+
+
+        <!-- BOTÃO -->
+
+        <button
+          type="submit"
+          class="botao-comprar"
+          id="botaoComprar"
+        >
+          COMPRAR INGRESSO
+        </button>
+
+
+        <!-- PROCESSANDO -->
+
+        <div
+          class="processando"
+          id="processando"
+        >
+          Criando seu pagamento...
+        </div>
+
+
+        <!-- ERRO -->
+
+        <div
+          class="erro"
+          id="erro"
+        ></div>
+
+
+        <div class="aviso">
+
+          Após o pagamento confirmado,
+          seu ingresso será liberado.
+
+          <br><br>
+
+          O QR Code será gerado
+          individualmente para cada ingresso.
+
+        </div>
+
+
+      </form>
+
+    </div>
+
+
+  </div>
+
+
+
+  <script>
+
+
+    // =================================================
+    // CONFIGURAÇÃO
+    // =================================================
+
+    const URL_APPS_SCRIPT =
+      'https://script.google.com/macros/s/AKfycbykpwLaURk9hTQWJICUr8mzPoRqqQh-us9pHFfhT60sfO7PjqJzot3FuV8xnN3bED0/exec';
+
+
+    const PRECO =
+      30;
+
+
+    // =================================================
+    // ELEMENTOS
+    // =================================================
+
+    const formulario =
+      document.getElementById('formulario');
+
+
+    const quantidade =
+      document.getElementById('quantidade');
+
+
+    const total =
+      document.getElementById('total');
+
+
+    const botaoComprar =
+      document.getElementById('botaoComprar');
+
+
+    const processando =
+      document.getElementById('processando');
+
+
+    const erro =
+      document.getElementById('erro');
+
+
+
+    // =================================================
+    // ATUALIZA TOTAL
+    // =================================================
+
+    function atualizarTotal() {
+
+      const qtd =
+        Number(quantidade.value);
+
+
+      const valor =
+        qtd * PRECO;
+
+
+      total.textContent =
+        'Total: R$ ' +
+        valor
+          .toFixed(2)
+          .replace('.', ',');
+
+    }
+
+
+    quantidade.addEventListener(
+      'change',
+      atualizarTotal
+    );
+
+
+    // =================================================
+    // ENVIA PEDIDO
+    // =================================================
+
+    formulario.addEventListener(
+      'submit',
+      async function(event) {
+
+        event.preventDefault();
+
+
+        erro.style.display =
+          'none';
+
+
+        botaoComprar.disabled =
+          true;
+
+
+        processando.style.display =
+          'block';
+
+
+        try {
+
+
+          const dados = {
+
+            acao:
+              'criar_pedido',
+
+            nome:
+              document
+                .getElementById('nome')
+                .value
+                .trim(),
+
+            telefone:
+              document
+                .getElementById('telefone')
+                .value
+                .trim(),
+
+            cpf:
+              document
+                .getElementById('cpf')
+                .value
+                .trim(),
+
+            email:
+              document
+                .getElementById('email')
+                .value
+                .trim(),
+
+            quantidade:
+              Number(
+                quantidade.value
+              )
+
+          };
+
+
+          // =========================================
+          // ENVIA PARA O APPS SCRIPT
+          // =========================================
+
+          const resposta =
+            await fetch(
+              URL_APPS_SCRIPT,
+              {
+
+                method: 'POST',
+
+                headers: {
+
+                  'Content-Type':
+                    'text/plain;charset=utf-8'
+
+                },
+
+                body:
+                  JSON.stringify(dados)
+
+              }
+            );
+
+
+          const resultado =
+            await resposta.json();
+
+
+          // =========================================
+          // VERIFICA RESPOSTA
+          // =========================================
+
+          if (
+            !resultado.sucesso
+          ) {
+
+            throw new Error(
+              resultado.erro ||
+              'Não foi possível criar o pagamento.'
+            );
+
+          }
+
+
+          // =========================================
+          // REDIRECIONA PARA INFINITEPAY
+          // =========================================
+
+          if (
+            resultado.url_pagamento
+          ) {
+
+            window.location.href =
+              resultado.url_pagamento;
+
+            return;
+
+          }
+
+
+          throw new Error(
+            'Link de pagamento não recebido.'
+          );
+
+
+        } catch (e) {
+
+
+          erro.textContent =
+            e.message ||
+            'Ocorreu um erro. Tente novamente.';
+
+
+          erro.style.display =
+            'block';
+
+
+          botaoComprar.disabled =
+            false;
+
+
+          processando.style.display =
+            'none';
+
+        }
+
+      }
+    );
+
+
+    // =================================================
+    // FORMATA CPF
+    // =================================================
+
+    document
+      .getElementById('cpf')
+      .addEventListener(
+        'input',
+        function() {
+
+          let valor =
+            this.value
+              .replace(/\D/g, '')
+              .slice(0, 11);
+
+
+          valor =
+            valor.replace(
+              /(\d{3})(\d)/,
+              '$1.$2'
+            );
+
+
+          valor =
+            valor.replace(
+              /(\d{3})(\d)/,
+              '$1.$2'
+            );
+
+
+          valor =
+            valor.replace(
+              /(\d{3})(\d{1,2})$/,
+              '$1-$2'
+            );
+
+
+          this.value =
+            valor;
+
+        }
+      );
+
+
+    // =================================================
+    // FORMATA TELEFONE
+    // =================================================
+
+    document
+      .getElementById('telefone')
+      .addEventListener(
+        'input',
+        function() {
+
+          let valor =
+            this.value
+              .replace(/\D/g, '')
+              .slice(0, 11);
+
+
+          if (
+            valor.length <= 10
+          ) {
+
+            valor =
+              valor.replace(
+                /^(\d{2})(\d)/,
+                '($1) $2'
+              );
+
+            valor =
+              valor.replace(
+                /(\d{4})(\d)/,
+                '$1-$2'
+              );
+
+          } else {
+
+            valor =
+              valor.replace(
+                /^(\d{2})(\d)/,
+                '($1) $2'
+              );
+
+            valor =
+              valor.replace(
+                /(\d{5})(\d)/,
+                '$1-$2'
+              );
+
+          }
+
+
+          this.value =
+            valor;
+
+        }
+      );
+
+
+    // =================================================
+    // INICIA TOTAL
+    // =================================================
+
+    atualizarTotal();
+
+
+  </script>
+
+
+</body>
+
+</html>
