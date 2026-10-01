@@ -9,7 +9,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-  <title>NOITE DO HORROR - Ingressos</title>
+  <title>NOITE DO HORROR</title>
 
   <style>
 
@@ -20,51 +20,44 @@
     body {
       margin: 0;
       padding: 20px;
-      background: #111;
-      color: #fff;
+      background: #f3f4f6;
       font-family: Arial, sans-serif;
     }
 
     .container {
       max-width: 450px;
-      margin: 30px auto;
-    }
-
-    .cabecalho {
+      margin: 40px auto;
+      background: white;
+      padding: 30px 20px;
+      border-radius: 20px;
       text-align: center;
-      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.12);
     }
 
-    .cabecalho h1 {
-      font-size: 36px;
-      margin: 0 0 10px;
+    h1 {
+      margin-top: 0;
+      font-size: 32px;
     }
 
-    .cabecalho p {
-      color: #ccc;
+    .evento {
+      color: #666;
+      margin-bottom: 30px;
       font-size: 18px;
     }
 
-    .card {
-      background: #fff;
-      color: #111;
-      border-radius: 20px;
-      padding: 25px 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.3);
-    }
-
     .lote {
-      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
     }
 
     .lote h2 {
       margin-top: 0;
-      font-size: 24px;
     }
 
     .preco {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: bold;
       margin: 15px 0;
     }
@@ -91,28 +84,36 @@
       border-radius: 10px;
     }
 
-    button {
+    .botao-comprar {
       width: 100%;
       padding: 16px;
       margin-top: 20px;
       border: none;
       border-radius: 10px;
-      background: #111;
-      color: #fff;
+
+      /* COR DO BOTÃO */
+      background: #111827;
+
+      color: white;
       font-size: 18px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    button:hover {
+    .botao-comprar:hover {
       opacity: .9;
     }
 
+    .total {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
     .aviso {
-      text-align: center;
-      color: #aaa;
-      font-size: 13px;
       margin-top: 15px;
+      color: #777;
+      font-size: 13px;
     }
 
   </style>
@@ -123,16 +124,14 @@
 
   <div class="container">
 
-    <div class="cabecalho">
+    <h1>NOITE DO HORROR</h1>
 
-      <h1>NOITE DO HORROR</h1>
-
-      <p>Garanta seu ingresso</p>
-
+    <div class="evento">
+      Garanta seu ingresso
     </div>
 
 
-    <div class="card lote">
+    <div class="lote">
 
       <h2>PRÉ-VENDA</h2>
 
@@ -147,7 +146,7 @@
     </div>
 
 
-    <div class="card">
+    <div class="lote">
 
       <h2>Dados do comprador</h2>
 
@@ -160,7 +159,6 @@
         <input
           type="text"
           id="nome"
-          name="nome"
           placeholder="Digite seu nome"
           required
         >
@@ -173,89 +171,10 @@
         <input
           type="tel"
           id="telefone"
-          name="telefone"
           placeholder="(00) 00000-0000"
           required
         >
 
 
-        <label for="documento">
-          CPF / Documento
-        </label>
-
-        <input
-          type="text"
-          id="documento"
-          name="documento"
-          placeholder="Digite seu CPF"
-          required
-        >
-
-
-        <label for="email">
-          E-mail
-        </label>
-
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="seuemail@email.com"
-          required
-        >
-
-
-        <label for="quantidade">
-          Quantidade de ingressos
-        </label>
-
-        <select
-          id="quantidade"
-          name="quantidade"
-          required
-        >
-
-          <option value="1">1 ingresso</option>
-          <option value="2">2 ingressos</option>
-          <option value="3">3 ingressos</option>
-          <option value="4">4 ingressos</option>
-          <option value="5">5 ingressos</option>
-
-        </select>
-
-
-        <button type="submit">
-          Comprar ingresso
-        </button>
-
-      </form>
-
-      <div class="aviso">
-        O ingresso será liberado somente após a confirmação do pagamento.
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <script>
-
-    document
-      .getElementById("formulario")
-      .addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        alert(
-          "Formulário preenchido! Agora vamos conectar o pagamento."
-        );
-
-      });
-
-  </script>
-
-</body>
-
-</html>
+        <label fo
 ```
