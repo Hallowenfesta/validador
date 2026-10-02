@@ -1,0 +1,545 @@
+/*
+ * Sistema visual compartilhado: vendas, ingresso e portaria.
+ *
+ * Referência: a linguagem dos apps da Apple no modo escuro. Superfícies
+ * translúcidas com desfoque, cantos bem arredondados, tipografia grande com
+ * espaçamento negativo nos títulos e animações curtas com curva de "mola".
+ *
+ * Tema escuro de propósito: combina com o evento e, na portaria, à noite,
+ * tela branca no brilho máximo ofusca quem está validando.
+ */
+
+:root {
+  /* Cores de base */
+  --fundo: #0b090e;
+  --superficie: rgba(30, 26, 36, 0.72);
+  --superficie-solida: #1c1822;
+  --preenchimento: rgba(255, 255, 255, 0.06);
+  --preenchimento-hover: rgba(255, 255, 255, 0.09);
+  --separador: rgba(255, 255, 255, 0.08);
+
+  /* Texto em três níveis, como o label/secondaryLabel/tertiaryLabel do iOS */
+  --texto: #f5f2ee;
+  --texto-2: rgba(235, 230, 245, 0.62);
+  --texto-3: rgba(235, 230, 245, 0.38);
+
+  /* Destaque (laranja do evento) e cores de sistema no modo escuro */
+  --destaque: #ff6a1a;
+  --destaque-claro: #ff8a4c;
+  --destaque-suave: rgba(255, 106, 26, 0.16);
+  --sobre-destaque: #1d0e04;
+  --sucesso: #30d158;
+  --alerta: #ff9f0a;
+  --perigo: #ff453a;
+
+  /* Forma */
+  --raio-cartao: 22px;
+  --raio-controle: 13px;
+  --altura-controle: 52px;
+
+  /* Movimento. A primeira curva imita a mola das animações do iOS. */
+  --mola: cubic-bezier(0.32, 0.72, 0, 1);
+  --suave: cubic-bezier(0.22, 1, 0.36, 1);
+  --rapido: 160ms;
+  --medio: 320ms;
+  --lento: 560ms;
+
+  --fonte: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --fonte-titulo: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --fonte-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: max(20px, env(safe-area-inset-top)) 18px max(28px, env(safe-area-inset-bottom));
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(255, 106, 26, 0.18), transparent 60%),
+    radial-gradient(80% 50% at 100% 100%, rgba(120, 60, 160, 0.10), transparent 70%),
+    var(--fundo);
+  background-attachment: fixed;
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pagina {
+  width: 100%;
+  max-width: 440px;
+  margin: 28px auto;
+}
+
+/* ---------- Cabeçalho ---------- */
+
+.cabecalho {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.sobretitulo {
+  margin: 0 0 6px;
+  color: var(--destaque);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--fonte-titulo);
+  font-size: clamp(2.1rem, 9vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-family: var(--fonte-titulo);
+  font-size: 1.3rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.subtitulo {
+  margin: 8px 0 0;
+  color: var(--texto-2);
+  font-size: 1.05rem;
+}
+
+/* ---------- Cartões ---------- */
+
+.cartao {
+  position: relative;
+  padding: 24px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--separador);
+  border-radius: var(--raio-cartao);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 20px 50px -20px rgba(0, 0, 0, 0.7);
+  -webkit-backdrop-filter: saturate(160%) blur(24px);
+  backdrop-filter: saturate(160%) blur(24px);
+}
+
+.cartao + .cartao {
+  margin-top: 14px;
+}
+
+/* ---------- Formulários ---------- */
+
+.campo {
+  margin-bottom: 16px;
+}
+
+label,
+.rotulo {
+  display: block;
+  margin: 0 0 7px 4px;
+  color: var(--texto-2);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+input,
+select {
+  width: 100%;
+  height: var(--altura-controle);
+  padding: 0 16px;
+  font: inherit;
+  font-size: 17px; /* abaixo de 16px o iPhone dá zoom ao focar o campo */
+  color: var(--texto);
+  background: var(--preenchimento);
+  border: 1px solid transparent;
+  border-radius: var(--raio-controle);
+  outline: none;
+  transition:
+    background var(--rapido) ease,
+    box-shadow var(--medio) var(--suave),
+    border-color var(--rapido) ease;
+}
+
+input::placeholder {
+  color: var(--texto-3);
+}
+
+input:hover {
+  background: var(--preenchimento-hover);
+}
+
+input:focus {
+  background: var(--preenchimento-hover);
+  border-color: rgba(255, 106, 26, 0.6);
+  box-shadow: 0 0 0 4px var(--destaque-suave);
+}
+
+input[aria-invalid='true'] {
+  border-color: rgba(255, 69, 58, 0.55);
+  box-shadow: 0 0 0 4px rgba(255, 69, 58, 0.14);
+}
+
+.ajuda-campo {
+  margin: 6px 0 0 4px;
+  color: var(--texto-3);
+  font-size: 0.8rem;
+}
+
+/* A mensagem de erro desliza pra dentro quando aparece. */
+.erro-campo {
+  margin: 6px 0 0 4px;
+  color: var(--perigo);
+  font-size: 0.82rem;
+}
+
+.erro-campo:empty {
+  display: none;
+}
+
+.erro-campo:not(:empty) {
+  animation: deslizar-entrada var(--medio) var(--suave);
+}
+
+/* ---------- Botões ---------- */
+
+.botao {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: var(--altura-controle);
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--raio-controle);
+  font: inherit;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  user-select: none;
+  color: var(--sobre-destaque);
+  background: linear-gradient(180deg, var(--destaque-claro) 0%, var(--destaque) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 8px 24px -8px rgba(255, 106, 26, 0.6);
+  transition:
+    transform var(--medio) var(--mola),
+    filter var(--rapido) ease,
+    box-shadow var(--medio) var(--suave),
+    opacity var(--rapido) ease;
+}
+
+.botao svg {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.botao:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 12px 30px -8px rgba(255, 106, 26, 0.7);
+}
+
+/* O "afundar" ao tocar é o que dá a sensação de botão de verdade. */
+.botao:active:not(:disabled) {
+  transform: scale(0.97);
+  filter: brightness(0.96);
+  transition-duration: 80ms;
+}
+
+.botao:disabled {
+  cursor: default;
+  opacity: 0.5;
+  box-shadow: none;
+}
+
+.botao[aria-busy='true'] {
+  opacity: 0.85;
+}
+
+.botao:focus-visible {
+  outline: 3px solid rgba(255, 106, 26, 0.55);
+  outline-offset: 3px;
+}
+
+.botao-secundario {
+  color: var(--texto);
+  background: var(--preenchimento-hover);
+  box-shadow: none;
+}
+
+.botao-secundario:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: none;
+  filter: none;
+}
+
+.botao + .botao {
+  margin-top: 10px;
+}
+
+.botao-texto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: var(--destaque);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--rapido) ease, opacity var(--rapido) ease;
+}
+
+.botao-texto:hover {
+  background: var(--destaque-suave);
+}
+
+.botao-texto:active {
+  opacity: 0.6;
+}
+
+.botao-texto-neutro {
+  color: var(--texto-2);
+}
+
+.botao-texto-neutro:hover {
+  background: var(--preenchimento);
+}
+
+/* ---------- Mensagens ---------- */
+
+.aviso {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 16px 0 0;
+  padding: 13px 15px;
+  border-radius: var(--raio-controle);
+  font-size: 0.93rem;
+  line-height: 1.4;
+  animation: deslizar-entrada var(--medio) var(--suave);
+}
+
+.aviso svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
+.aviso-erro {
+  background: rgba(255, 69, 58, 0.12);
+  color: #ffb3ad;
+}
+
+.nota {
+  color: var(--texto-3);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ---------- Ícones ---------- */
+
+.icone {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.22em;
+}
+
+/* Medalhão redondo com ícone, usado no topo dos estados (sucesso, erro...). */
+.medalhao {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: var(--destaque-suave);
+  color: var(--destaque);
+}
+
+.medalhao svg {
+  width: 32px;
+  height: 32px;
+}
+
+.medalhao-sucesso {
+  background: rgba(48, 209, 88, 0.14);
+  color: var(--sucesso);
+}
+
+.medalhao-alerta {
+  background: rgba(255, 159, 10, 0.14);
+  color: var(--alerta);
+}
+
+/* Traço que se desenha sozinho: os caminhos usam pathLength="1". */
+.desenhar path,
+.desenhar circle,
+.desenhar polyline {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: desenhar 700ms var(--suave) forwards;
+}
+
+.desenhar :nth-child(2) {
+  animation-delay: 220ms;
+}
+
+.desenhar :nth-child(3) {
+  animation-delay: 380ms;
+}
+
+/* ---------- Carregamento ---------- */
+
+/* Anel girando, no estilo do UIActivityIndicator. */
+.giratorio {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  border: 2.2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: girar 0.75s linear infinite;
+}
+
+.giratorio-grande {
+  width: 36px;
+  height: 36px;
+  border-width: 3px;
+  color: var(--destaque);
+}
+
+/* Placeholder com brilho passando enquanto o dado não chega. */
+.esqueleto {
+  display: inline-block;
+  min-width: 5em;
+  border-radius: 8px;
+  color: transparent !important;
+  background: linear-gradient(90deg, var(--preenchimento) 0%, rgba(255, 255, 255, 0.12) 50%, var(--preenchimento) 100%);
+  background-size: 200% 100%;
+  animation: brilho 1.4s ease-in-out infinite;
+}
+
+/* ---------- Entrada dos elementos ---------- */
+
+/*
+ * Quem tem a classe .surgir entra subindo levemente. O atraso é escalonado
+ * pela variável --i (0, 1, 2...) definida no HTML ou no JS.
+ */
+.surgir {
+  animation: surgir var(--lento) var(--suave) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* Balançar de "não": usado quando o formulário é enviado com erro. */
+.tremer {
+  animation: tremer 420ms var(--suave);
+}
+
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+@keyframes deslizar-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes desenhar {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes brilho {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@keyframes tremer {
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(2px); }
+}
+
+/* Quem pediu menos movimento no sistema recebe só as transições de cor. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .giratorio {
+    animation: girar 1.5s linear infinite !important;
+  }
+}
+
+/* ---------- Utilitários ---------- */
+
+.so-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+[hidden] {
+  display: none !important;
+}

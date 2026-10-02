@@ -1,0 +1,27 @@
+# Dependências (recriadas com `npm install`)
+node_modules/
+
+# Saídas de teste do Playwright
+test-results/
+playwright-report/
+blob-report/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Variáveis de ambiente e segredos locais (nunca versionar chaves)
+.env
+.env.*
+
+# Configuração local do clasp, se alguém usar (contém o ID do script)
+.clasp.json
+.clasprc.json
+
+# Arquivos de sistema e de editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp

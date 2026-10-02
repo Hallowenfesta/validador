@@ -1,0 +1,228 @@
+/* Específico da página de ingressos. */
+
+.centro {
+  text-align: center;
+}
+
+.estado-titulo {
+  margin: 16px 0 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+#estado-carregando {
+  padding-block: 36px;
+}
+
+#estado-erro .botao {
+  margin-top: 18px;
+}
+
+#saudacao {
+  margin-bottom: 6px;
+  font-size: 1.5rem;
+}
+
+/* Ícone em linha com o texto, pra acompanhar quando o e-mail é longo e quebra. */
+.aviso-email {
+  margin: 0;
+  color: var(--texto-2);
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.aviso-email .icone {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  vertical-align: -0.2em;
+}
+
+/* ---------- Passe (estilo Apple Wallet) ---------- */
+
+.passe {
+  position: relative;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: var(--raio-cartao);
+  background: var(--superficie-solida);
+  border: 1px solid var(--separador);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.8);
+  text-align: center;
+}
+
+.passe-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #ff7a2e 0%, #e2500a 100%);
+  color: var(--sobre-destaque);
+}
+
+.passe-evento {
+  font-family: var(--fonte-titulo);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.passe-numero {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.passe-titular {
+  padding: 16px 20px 18px;
+  text-align: left;
+}
+
+.passe-rotulo {
+  display: block;
+  color: var(--texto-3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.passe-titular strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Linha picotada com os dois "recortes" nas laterais, como ingresso de papel. */
+.passe-picote {
+  position: relative;
+  height: 0;
+  margin: 0 18px;
+  border-top: 2px dashed rgba(255, 255, 255, 0.1);
+}
+
+.passe-picote::before,
+.passe-picote::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--fundo);
+  border: 1px solid var(--separador);
+}
+
+.passe-picote::before {
+  left: -29px; /* 18px de margem + metade do círculo */
+}
+
+.passe-picote::after {
+  right: -29px;
+}
+
+.passe-corpo {
+  padding: 24px 20px 22px;
+}
+
+/* QR sempre em fundo branco com margem: leitor de câmera precisa de contraste
+   e da "zona quieta" em volta pra reconhecer rápido. */
+.qr {
+  display: inline-block;
+  padding: 14px;
+  background: #fff;
+  border-radius: 16px;
+  line-height: 0;
+  transition: opacity var(--medio) ease, filter var(--medio) ease;
+}
+
+.qr img,
+.qr canvas {
+  width: 216px;
+  height: 216px;
+  image-rendering: pixelated;
+}
+
+.codigo {
+  margin: 16px 0 0;
+  font-family: var(--fonte-mono);
+  font-size: 1.45rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  /* compensa o espaçamento do último caractere pra centralizar de verdade */
+  padding-left: 0.28em;
+}
+
+.selo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.selo::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.selo-valido {
+  background: rgba(48, 209, 88, 0.14);
+  color: var(--sucesso);
+}
+
+.selo-utilizado {
+  background: rgba(255, 69, 58, 0.14);
+  color: var(--perigo);
+}
+
+.passe.usado .qr {
+  opacity: 0.22;
+  filter: grayscale(1);
+}
+
+/* ---------- Instruções ---------- */
+
+.instrucoes {
+  margin-top: 14px;
+}
+
+.instrucoes h2 {
+  font-size: 1.05rem;
+  margin-bottom: 12px;
+}
+
+.instrucoes ul {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.instrucoes li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  color: var(--texto-2);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+.instrucoes .icone {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  color: var(--destaque);
+}
