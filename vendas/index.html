@@ -24,6 +24,7 @@
     }
 
     .container {
+      width: 100%;
       max-width: 450px;
       margin: 40px auto;
       background: white;
@@ -135,6 +136,52 @@
       font-size: 14px;
     }
 
+
+    /* ==========================================
+       AJUSTE PARA TELAS MAIORES
+       ========================================== */
+
+    @media (min-width: 700px) {
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container {
+        margin: 20px auto;
+      }
+
+    }
+
+
+    /* ==========================================
+       CELULAR
+       ========================================== */
+
+    @media (max-width: 480px) {
+
+      body {
+        padding: 12px;
+      }
+
+      .container {
+        margin: 20px auto;
+        padding: 25px 18px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .preco {
+        font-size: 30px;
+      }
+
+    }
+
   </style>
 
 </head>
@@ -156,9 +203,9 @@
     </div>
 
 
-    <!-- ========================================= -->
-    <!-- LOTE ATUAL -->
-    <!-- ========================================= -->
+    <!-- ======================================
+         LOTE ATUAL
+         ====================================== -->
 
     <div class="lote">
 
@@ -177,9 +224,9 @@
     </div>
 
 
-    <!-- ========================================= -->
-    <!-- DADOS DO COMPRADOR -->
-    <!-- ========================================= -->
+    <!-- ======================================
+         DADOS DO COMPRADOR
+         ====================================== -->
 
     <div class="lote">
 
@@ -190,8 +237,6 @@
 
       <form id="formulario">
 
-
-        <!-- NOME -->
 
         <label for="nome">
           Nome completo
@@ -206,8 +251,6 @@
         >
 
 
-        <!-- TELEFONE -->
-
         <label for="telefone">
           Telefone
         </label>
@@ -220,8 +263,6 @@
           required
         >
 
-
-        <!-- CPF -->
 
         <label for="cpf">
           CPF
@@ -236,8 +277,6 @@
         >
 
 
-        <!-- EMAIL -->
-
         <label for="email">
           E-mail
         </label>
@@ -250,8 +289,6 @@
           required
         >
 
-
-        <!-- QUANTIDADE -->
 
         <label for="quantidade">
           Quantidade de ingressos
@@ -285,8 +322,6 @@
         </select>
 
 
-        <!-- TOTAL -->
-
         <div
           class="total"
           id="total"
@@ -294,8 +329,6 @@
           Total: R$ 30,00
         </div>
 
-
-        <!-- BOTÃO -->
 
         <button
           type="submit"
@@ -306,8 +339,6 @@
         </button>
 
 
-        <!-- PROCESSANDO -->
-
         <div
           class="processando"
           id="processando"
@@ -315,8 +346,6 @@
           Criando seu pagamento...
         </div>
 
-
-        <!-- ERRO -->
 
         <div
           class="erro"
@@ -349,60 +378,51 @@
   <script>
 
 
-    // =================================================
-    // CONFIGURAÇÃO
-    // =================================================
+    // ==========================================
+    // APPS SCRIPT
+    // ==========================================
 
     const URL_APPS_SCRIPT =
       'https://script.google.com/macros/s/AKfycbykpwLaURk9hTQWJICUr8mzPoRqqQh-us9pHFfhT60sfO7PjqJzot3FuV8xnN3bED0/exec';
 
 
-    const PRECO =
-      30;
+    const PRECO = 30;
 
 
-    // =================================================
+    // ==========================================
     // ELEMENTOS
-    // =================================================
+    // ==========================================
 
     const formulario =
       document.getElementById('formulario');
 
-
     const quantidade =
       document.getElementById('quantidade');
-
 
     const total =
       document.getElementById('total');
 
-
     const botaoComprar =
       document.getElementById('botaoComprar');
 
-
     const processando =
       document.getElementById('processando');
-
 
     const erro =
       document.getElementById('erro');
 
 
-
-    // =================================================
+    // ==========================================
     // ATUALIZA TOTAL
-    // =================================================
+    // ==========================================
 
     function atualizarTotal() {
 
       const qtd =
         Number(quantidade.value);
 
-
       const valor =
         qtd * PRECO;
-
 
       total.textContent =
         'Total: R$ ' +
@@ -419,9 +439,9 @@
     );
 
 
-    // =================================================
+    // ==========================================
     // ENVIA PEDIDO
-    // =================================================
+    // ==========================================
 
     formulario.addEventListener(
       'submit',
@@ -482,9 +502,9 @@
           };
 
 
-          // =========================================
+          // ======================================
           // ENVIA PARA O APPS SCRIPT
-          // =========================================
+          // ======================================
 
           const resposta =
             await fetch(
@@ -494,10 +514,8 @@
                 method: 'POST',
 
                 headers: {
-
                   'Content-Type':
                     'text/plain;charset=utf-8'
-
                 },
 
                 body:
@@ -511,9 +529,9 @@
             await resposta.json();
 
 
-          // =========================================
-          // VERIFICA RESPOSTA
-          // =========================================
+          // ======================================
+          // VERIFICA RESULTADO
+          // ======================================
 
           if (
             !resultado.sucesso
@@ -527,9 +545,9 @@
           }
 
 
-          // =========================================
-          // REDIRECIONA PARA INFINITEPAY
-          // =========================================
+          // ======================================
+          // ABRE INFINITEPAY
+          // ======================================
 
           if (
             resultado.url_pagamento
@@ -573,9 +591,9 @@
     );
 
 
-    // =================================================
-    // FORMATA CPF
-    // =================================================
+    // ==========================================
+    // MÁSCARA CPF
+    // ==========================================
 
     document
       .getElementById('cpf')
@@ -617,9 +635,9 @@
       );
 
 
-    // =================================================
-    // FORMATA TELEFONE
-    // =================================================
+    // ==========================================
+    // MÁSCARA TELEFONE
+    // ==========================================
 
     document
       .getElementById('telefone')
@@ -673,9 +691,9 @@
       );
 
 
-    // =================================================
+    // ==========================================
     // INICIA TOTAL
-    // =================================================
+    // ==========================================
 
     atualizarTotal();
 
