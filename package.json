@@ -1,0 +1,22 @@
+{
+  "name": "noite-do-horror-ingressos",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Venda e validação de ingressos: GitHub Pages + Google Apps Script + InfinitePay.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test \"tests/backend/*.test.js\" \"tests/frontend/*.test.js\"",
+    "test:e2e": "node --test --test-concurrency=1 \"tests/e2e/*.test.js\"",
+    "test:tudo": "npm test && npm run test:e2e",
+    "servir": "node tests/e2e/servidor.js",
+    "telas": "node scripts/capturar-telas.mjs",
+    "relatorio": "node scripts/gerar-relatorio-pdf.mjs"
+  },
+  "devDependencies": {
+    "marked": "18.0.14",
+    "playwright": "1.63.0"
+  }
+}

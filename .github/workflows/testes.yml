@@ -1,0 +1,30 @@
+# Roda a suíte inteira a cada push e pull request.
+# Se ficar vermelho, não publique o Apps Script novo até entender o motivo.
+name: Testes
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Testes de unidade e integração (backend + validações do front)
+        run: npm test
+
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Testes ponta a ponta no navegador
+        run: npm run test:e2e

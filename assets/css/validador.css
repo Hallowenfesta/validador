@@ -1,0 +1,267 @@
+/* Específico do validador da portaria. */
+
+.centro {
+  text-align: center;
+}
+
+/* ---------- Visor da câmera ---------- */
+
+.visor {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.05), transparent 70%),
+    #07060a;
+}
+
+.leitor {
+  width: 100%;
+}
+
+.leitor:empty {
+  display: none;
+}
+
+.leitor video {
+  display: block;
+  width: 100% !important;
+  object-fit: cover;
+}
+
+/* Some com a moldura de linhas que a biblioteca desenha; usamos a nossa. */
+.leitor #qr-shaded-region {
+  border-color: rgba(0, 0, 0, 0.45) !important;
+}
+
+.leitor #qr-shaded-region > div {
+  display: none !important;
+}
+
+.visor-vazio {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: var(--texto-3);
+  font-size: 0.9rem;
+}
+
+.visor-vazio .icone {
+  width: 34px;
+  height: 34px;
+  stroke-width: 1.6;
+}
+
+/* Quatro cantos de enquadramento, como o leitor de QR da câmera do iPhone. */
+.visor-cantos {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 62%;
+  aspect-ratio: 1;
+  max-height: 80%;
+  pointer-events: none;
+  transition: transform var(--lento) var(--mola), opacity var(--medio) ease;
+}
+
+.visor-cantos i {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 3.5px solid rgba(255, 255, 255, 0.28);
+  transition: border-color var(--medio) ease;
+}
+
+.visor-cantos i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 14px; }
+.visor-cantos i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 14px; }
+.visor-cantos i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 14px; }
+.visor-cantos i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 14px; }
+
+/* Com a câmera ligada, os cantos ficam laranja e "respiram" devagar. */
+.visor.ativo .visor-cantos i {
+  border-color: var(--destaque);
+}
+
+.visor.ativo .visor-cantos {
+  animation: respirar 2.4s ease-in-out infinite;
+}
+
+.visor.ativo .visor-vazio {
+  display: none;
+}
+
+@keyframes respirar {
+  50% {
+    transform: scale(0.94);
+  }
+}
+
+/* ---------- Digitação manual ---------- */
+
+.separador-texto {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 14px;
+  color: var(--texto-3);
+  font-size: 0.8rem;
+}
+
+.separador-texto::before,
+.separador-texto::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--separador);
+}
+
+.form-codigo {
+  display: flex;
+  gap: 8px;
+}
+
+.form-codigo input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--fonte-mono);
+  letter-spacing: 0.18em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* O estilo de "código" (maiúsculo, espaçado) é pro que se digita, não pra dica. */
+.form-codigo input::placeholder {
+  font-family: var(--fonte);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.form-codigo .botao {
+  width: auto;
+  margin: 0;
+  padding-inline: 22px;
+}
+
+/* ---------- Rodapé ---------- */
+
+.rodape-portaria {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.status {
+  margin: 0;
+  color: var(--texto-2);
+  font-size: 0.92rem;
+}
+
+.contador {
+  margin: 4px 0 8px;
+  color: var(--texto-3);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Resultado em tela cheia ---------- */
+
+.resultado {
+  --cor: #1f8f45;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  text-align: center;
+  color: #fff;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(255, 255, 255, 0.18), transparent 60%),
+    var(--cor);
+  animation: fundo-entrar var(--medio) ease-out;
+}
+
+.resultado.valido { --cor: #1f8f45; }
+.resultado.utilizado { --cor: #c27200; }
+.resultado.invalido,
+.resultado.erro { --cor: #c42b22; }
+
+.resultado-conteudo {
+  width: 100%;
+  max-width: 400px;
+  animation: conteudo-entrar var(--lento) var(--mola);
+}
+
+.resultado-icone {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.06);
+}
+
+.resultado-icone .icone {
+  width: 64px;
+  height: 64px;
+  stroke-width: 2.2;
+}
+
+.resultado-titulo {
+  margin: 26px 0 6px;
+  font-size: clamp(2rem, 9vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.resultado-nome {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.resultado-nome:empty {
+  display: none;
+}
+
+.resultado-detalhe {
+  margin: 8px 0 36px;
+  font-size: 1.02rem;
+  opacity: 0.85;
+}
+
+/* Botão branco sobre a cor, com o texto na própria cor do fundo. */
+.resultado-botao {
+  color: var(--cor);
+  background: #fff;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.resultado-botao:hover:not(:disabled) {
+  filter: none;
+  box-shadow: 0 14px 34px -10px rgba(0, 0, 0, 0.55);
+}
+
+.resultado-botao:focus-visible {
+  outline-color: rgba(255, 255, 255, 0.7);
+}
+
+@keyframes fundo-entrar {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes conteudo-entrar {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+}
