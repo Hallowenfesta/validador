@@ -207,8 +207,12 @@ async function enviar(evento) {
     // Só aceita redirecionar pro domínio da InfinitePay. Se algum dia o
     // backend for comprometido, ele não consegue mandar o cliente pra um
     // checkout falso. A documentação mostra links em .com.br e .io.
+    // Página do próprio site também é aceita: é o checkout simulado do
+    // modo demo (npm run demo), e mandar pro mesmo site não oferece risco.
     const destino = new URL(urlPagamento);
-    if (destino.protocol !== 'https:' || !/(^|\.)infinitepay\.(io|com\.br)$/.test(destino.hostname)) {
+    const ehInfinitePay = destino.protocol === 'https:' &&
+      /(^|\.)infinitepay\.(io|com\.br)$/.test(destino.hostname);
+    if (!ehInfinitePay && destino.origin !== window.location.origin) {
       throw new ErroApi('Link de pagamento inválido. Fale com a organização.', 'LINK_INVALIDO');
     }
 

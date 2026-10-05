@@ -24,30 +24,38 @@ const TIPOS = {
 };
 
 /**
+ * Responde com um arquivo do repositório. Também usado pelo modo demo
+ * (scripts/demo-local.mjs), que acrescenta rotas próprias por cima.
+ * @param {http.IncomingMessage} req
+ * @param {http.ServerResponse} res
+ */
+export function servirArquivo(req, res) {
+  const caminhoUrl = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+  let arquivo = path.normalize(path.join(RAIZ, caminhoUrl));
+
+  // Bloqueia "../" pra fora do repositório.
+  if (!arquivo.startsWith(path.normalize(RAIZ))) {
+    res.writeHead(403).end();
+    return;
+  }
+  if (fs.existsSync(arquivo) && fs.statSync(arquivo).isDirectory()) {
+    arquivo = path.join(arquivo, 'index.html');
+  }
+  if (!fs.existsSync(arquivo) || /node_modules|\.git/.test(arquivo)) {
+    res.writeHead(404).end('404');
+    return;
+  }
+
+  res.writeHead(200, { 'Content-Type': TIPOS[path.extname(arquivo)] || 'application/octet-stream' });
+  fs.createReadStream(arquivo).pipe(res);
+}
+
+/**
  * @param {number} [porta] 0 = qualquer porta livre
  * @return {Promise<{url: string, fechar: () => Promise<void>}>}
  */
 export function iniciarServidor(porta = 0) {
-  const servidor = http.createServer((req, res) => {
-    const caminhoUrl = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-    let arquivo = path.normalize(path.join(RAIZ, caminhoUrl));
-
-    // Bloqueia "../" pra fora do repositório.
-    if (!arquivo.startsWith(path.normalize(RAIZ))) {
-      res.writeHead(403).end();
-      return;
-    }
-    if (fs.existsSync(arquivo) && fs.statSync(arquivo).isDirectory()) {
-      arquivo = path.join(arquivo, 'index.html');
-    }
-    if (!fs.existsSync(arquivo) || /node_modules|\.git/.test(arquivo)) {
-      res.writeHead(404).end('404');
-      return;
-    }
-
-    res.writeHead(200, { 'Content-Type': TIPOS[path.extname(arquivo)] || 'application/octet-stream' });
-    fs.createReadStream(arquivo).pipe(res);
-  });
+  const servidor = http.createServer(servirArquivo);
 
   return new Promise((resolve) => {
     servidor.listen(porta, '127.0.0.1', () => {
