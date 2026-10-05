@@ -936,7 +936,10 @@ e veja em *Implantar > Gerenciar implantações*.
 4. **Anote a chave.** Ela fica salva em *Configurações do projeto >
    Propriedades do script* (`CHAVE_PORTARIA`), se precisar consultar depois.
 5. Abra a planilha e confira: a aba `listagem` ganhou as colunas I–K e existe
-   uma aba nova `pedidos`.
+   uma aba nova `pedidos`. (Se não rodar esse passo, as abas e colunas são
+   criadas sozinhas no primeiro acesso; só a chave da portaria depende dele.)
+6. Rode também **`diagnosticar`**. Cada linha do registro deve começar com
+   `OK`. Qualquer `FALHA` vem com o motivo e o que fazer.
 
 **f) Publicar.** Esta é a etapa mais esquecida: **o Apps Script só passa a
 usar o código novo depois que você publica uma nova versão.**
@@ -1105,7 +1108,7 @@ não vê.
 | Sintoma | Causa provável | Solução |
 |---|---|---|
 | Página de vendas fica piscando e depois mostra "Sem conexão com o servidor" | URL errada em `assets/js/config.js`, ou implantação sem acesso "Qualquer pessoa" | Confira a URL e as permissões da implantação (6.2 f) |
-| Site mostra "Erro interno" | Exceção no Apps Script | Veja **Execuções**. Se diz "Aba não encontrada", rode `configurarSistema` |
+| Site mostra "Erro interno" | Exceção no Apps Script | Rode **`diagnosticar`** no editor: ele mostra o motivo real. Se a falha for ao abrir a planilha, a conta dona do script não tem acesso a ela ou o `PLANILHA_ID` está errado |
 | Mudou o código e nada mudou | Esqueceu de publicar nova versão | 6.2 f |
 | Cliente pagou e a página ficou em "Aguardando confirmação" até dar erro | Pix demorando muito, ou `payment_check` respondendo não pago | Procure o `order_nsu` em **Execuções**. Se a InfinitePay confirmar depois, o webhook emite e manda o e-mail sozinho |
 | Pedido `PAGO` mas o e-mail não chegou | Spam, ou cota do Gmail estourada | Coluna "e-mail enviado em" vazia = falhou. Use `reenviarEmailDoPedido`. O cliente também pode abrir os ingressos pela página |

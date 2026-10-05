@@ -159,8 +159,44 @@ Faça push na branch publicada. Se a URL do Apps Script mudou, atualize
 |---|---|
 | Cliente pagou e não recebeu nada | Procure o pedido na aba `pedidos`. Se estiver `AGUARDANDO_PAGAMENTO`, peça o link que ele recebeu ao voltar do checkout ou o comprovante e confira na InfinitePay. Os detalhes de cada chamada ficam em *Execuções*, no Apps Script. |
 | E-mail não chegou | Coluna "e-mail enviado em" vazia = falhou (geralmente cota). Rode `reenviarEmailDoPedido()` depois de colocar o order_nsu nela. |
-| "Erro interno" no site | Veja *Execuções* no Apps Script: a mensagem real fica no log, não na tela. |
+| "Erro interno" no site | Rode `diagnosticar()` no editor do Apps Script: ele mostra o motivo real. Os detalhes também ficam em *Execuções*. |
 | Site mostra "Sem conexão com o servidor" | URL em `assets/js/config.js` errada ou implantação sem acesso "Qualquer pessoa". |
+
+## Testar na sua máquina (modo demo)
+
+Roda o sistema inteiro localmente, **sem cobrar nada** e sem depender do
+Apps Script publicado. O site é o mesmo do GitHub Pages e o backend é o
+código `.gs` de verdade, num simulador. Só a planilha (fica na memória), o
+e-mail (aparece no painel) e o checkout da InfinitePay (uma página com botão
+"Pagar") são de mentira.
+
+```bash
+npm install          # só na primeira vez
+npm run demo
+```
+
+Abra **http://localhost:8080/demo/**. O painel mostra a chave da portaria,
+os links, os e-mails "enviados" e as abas da planilha, atualizando sozinho.
+
+Roteiro sugerido:
+
+1. **Vendas:** compre 1 ou 2 ingressos e teste os erros do formulário.
+2. **Checkout simulado:** clique em "Pagar com Pix".
+3. **Meus ingressos:** os QR Codes aparecem. No painel, o pedido vira `PAGO`
+   e surge o e-mail.
+4. **Portaria:** entre com a chave do painel e digite um código (verde).
+   Digite de novo (amarelo) e depois um código inventado (vermelho).
+
+Pra testar **a câmera**, abra a portaria no computador
+(`http://localhost:8080/`), que tem webcam, e mostre o QR na tela do celular.
+Pra abrir o ingresso no celular, rode `npm run demo:rede` (com o celular no
+mesmo Wi-Fi) e use o endereço que aparece no terminal. No celular a câmera
+não abre, porque o endereço não é `https`; no `localhost` do computador ela
+funciona.
+
+Por padrão o demo só aceita conexões da própria máquina. O `demo:rede` libera
+pra rede local; use só em rede de confiança. Pra trocar a porta:
+`PORTA=3000 npm run demo` (no PowerShell: `$env:PORTA=3000; npm run demo`).
 
 ## Desenvolvimento
 
@@ -175,7 +211,8 @@ npx playwright install chromium   # só na primeira vez, pros testes de navegado
 
 npm test            # backend + validações do site (~1 s)
 npm run test:e2e    # navegador de verdade, fluxo completo (~20 s)
-npm run servir      # abre o site em http://localhost:8080 usando o backend real
+npm run demo        # sistema inteiro local, com checkout simulado (veja acima)
+npm run servir      # só o site, falando com o Apps Script publicado de verdade
 npm run telas       # refaz os prints de docs/imagens/
 npm run relatorio   # gera o RELATORIO-DE-ENTREGA.pdf a partir do .md (precisa de internet)
 ```

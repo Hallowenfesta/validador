@@ -40,12 +40,15 @@ describe('roteamento HTTP', () => {
   });
 
   test('erro inesperado não vaza detalhes internos', () => {
-    // Sem rodar o configurarSistema, a aba "pedidos" não existe.
+    // Caso real: o projeto do Apps Script é de uma conta sem acesso à planilha.
     const amb = criarAmbiente({ configurar: false });
+    amb.gas.SpreadsheetApp.openById = () => {
+      throw new Error('Exception: Você não tem permissão para acessar o documento solicitado.');
+    };
     const r = amb.get();
     assert.equal(r.sucesso, false);
     assert.equal(r.codigo, 'ERRO_INTERNO');
-    assert.doesNotMatch(r.erro, /Aba|configurarSistema/);
+    assert.doesNotMatch(r.erro, /permissão|documento/);
     assert.ok(amb.logs.some((l) => l[0] === 'error'), 'detalhe vai pro log');
   });
 });

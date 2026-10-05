@@ -11,6 +11,8 @@
     "test": "node --test \"tests/backend/*.test.js\" \"tests/frontend/*.test.js\"",
     "test:e2e": "node --test --test-concurrency=1 \"tests/e2e/*.test.js\"",
     "test:tudo": "npm test && npm run test:e2e",
+    "demo": "node scripts/demo-local.mjs",
+    "demo:rede": "node scripts/demo-local.mjs --rede",
     "servir": "node tests/e2e/servidor.js",
     "telas": "node scripts/capturar-telas.mjs",
     "relatorio": "node scripts/gerar-relatorio-pdf.mjs"
