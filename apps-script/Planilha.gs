@@ -69,16 +69,44 @@ function abrirPlanilha_() {
 }
 
 /**
- * Retorna a aba pelo nome ou estoura erro. Erro aqui é de configuração,
- * não do usuário, por isso não é ErroNegocio: cai no "erro interno" genérico.
+ * Cabeçalho esperado de cada aba do sistema.
+ * É uma função (e não uma constante) de propósito: o Apps Script carrega os
+ * arquivos na ordem do editor, e o CONFIG pode ainda não existir quando este
+ * arquivo é lido. Dentro de função, ele só é consultado na hora do uso.
+ *
+ * @param {string} nome
+ * @return {ReadonlyArray<string>|null}
+ */
+function cabecalhoDaAba_(nome) {
+  if (nome === CONFIG.ABA_INGRESSOS) return CABECALHO_INGRESSOS;
+  if (nome === CONFIG.ABA_PEDIDOS) return CABECALHO_PEDIDOS;
+  return null;
+}
+
+/**
+ * Retorna a aba pronta pra uso, consertando o que faltar.
+ *
+ * A planilha do evento existia antes do sistema novo e pode não ter a aba
+ * "pedidos" nem as colunas novas da "listagem". Em vez de exigir que alguém
+ * lembre de rodar configurarSistema(), a aba se ajusta sozinha no primeiro
+ * acesso. Nada que já existe é apagado.
  *
  * @param {string} nome
  * @return {GoogleAppsScript.Spreadsheet.Sheet}
  */
 function obterAba_(nome) {
+  const cabecalho = cabecalhoDaAba_(nome);
   const aba = abrirPlanilha_().getSheetByName(nome);
+
   if (!aba) {
-    throw new Error('Aba "' + nome + '" não encontrada. Rode configurarSistema() uma vez.');
+    if (!cabecalho) throw new Error('Aba "' + nome + '" não encontrada.');
+    return garantirAba_(nome, cabecalho);
+  }
+
+  // Uma consulta barata (getMaxColumns) evita o "coordenadas fora das
+  // dimensões da página" quando a aba tem menos colunas que o esperado.
+  if (cabecalho && aba.getMaxColumns() < cabecalho.length) {
+    return garantirAba_(nome, cabecalho);
   }
   return aba;
 }
@@ -94,7 +122,15 @@ function obterAba_(nome) {
 function lerLinhasDeDados_(aba, totalColunas) {
   const ultimaLinha = aba.getLastRow();
   if (ultimaLinha < 2) return [];
-  return aba.getRange(2, 1, ultimaLinha - 1, totalColunas).getValues();
+
+  // Nunca pede mais colunas do que a aba tem (o Google recusa); o que
+  // faltar é completado com vazio, pra quem lê não precisar se preocupar.
+  const colunasExistentes = Math.min(totalColunas, aba.getMaxColumns());
+  return aba.getRange(2, 1, ultimaLinha - 1, colunasExistentes).getValues()
+    .map(function (linha) {
+      while (linha.length < totalColunas) linha.push('');
+      return linha;
+    });
 }
 
 /**
@@ -129,7 +165,19 @@ function garantirAba_(nome, cabecalho) {
   const planilha = abrirPlanilha_();
   let aba = planilha.getSheetByName(nome);
   if (!aba) {
-    aba = planilha.insertSheet(nome);
+    try {
+      aba = planilha.insertSheet(nome);
+    } catch (e) {
+      // Duas execuções chegando juntas: a outra criou a aba primeiro.
+      aba = planilha.getSheetByName(nome);
+      if (!aba) throw e;
+    }
+  }
+
+  // Abre espaço pras colunas novas antes de escrever o cabeçalho nelas.
+  const faltam = cabecalho.length - aba.getMaxColumns();
+  if (faltam > 0) {
+    aba.insertColumnsAfter(aba.getMaxColumns(), faltam);
   }
 
   const atual = aba.getLastColumn() > 0

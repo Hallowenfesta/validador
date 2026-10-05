@@ -27,10 +27,24 @@ function interpretarEntrada(valor) {
 }
 
 export class AbaFalsa {
-  constructor(nome) {
+  /**
+   * @param {string} nome
+   * @param {number} [maxColunas] uma aba nova do Sheets nasce com 26 (A–Z);
+   *   quem apagou as colunas sobrando pode ter bem menos.
+   */
+  constructor(nome, maxColunas = 26) {
     this.nome = nome;
+    this.maxColunas = maxColunas;
     /** @type {Array<Array<{valor: *, formula: string|null}>>} */
     this.celulas = [];
+  }
+
+  getMaxColumns() { return this.maxColunas; }
+
+  insertColumnsAfter(depoisDe, quantidade) {
+    if (depoisDe > this.maxColunas) throw new Error('Coluna inexistente');
+    this.maxColunas += quantidade;
+    return this;
   }
 
   getName() { return this.nome; }
@@ -68,6 +82,10 @@ export class AbaFalsa {
 
   getRange(linha, coluna, linhas = 1, colunas = 1) {
     if (linhas < 1 || colunas < 1) throw new Error('Intervalo vazio');
+    // Igual ao Google: pedir coluna além do limite da aba é erro.
+    if (coluna + colunas - 1 > this.maxColunas) {
+      throw new Error('As coordenadas do intervalo estão fora das dimensões da página.');
+    }
     const aba = this;
     return {
       getValues() {
@@ -109,8 +127,10 @@ export class AbaFalsa {
 
 class PlanilhaFalsa {
   constructor() { this.abas = new Map(); }
+  getName() { return 'Planilha de teste'; }
   getSheetByName(nome) { return this.abas.get(nome) || null; }
   insertSheet(nome) {
+    if (this.abas.has(nome)) throw new Error('Já existe uma página chamada "' + nome + '".');
     const aba = new AbaFalsa(nome);
     this.abas.set(nome, aba);
     return aba;
@@ -211,9 +231,16 @@ export function criarAmbiente(opcoes = {}) {
 
   // Mesma ordem alfabética que o editor do Apps Script costuma usar.
   // A ordem não deveria importar, porque nada roda no carregamento.
-  fs.readdirSync(PASTA_GAS)
-    .filter((f) => f.endsWith('.gs'))
-    .sort()
+  // O editor do Apps Script carrega os arquivos na ordem em que aparecem lá,
+  // que não é necessariamente alfabética. ordemReversa existe pra provar que
+  // nenhum arquivo depende de outro já ter sido carregado.
+  const arquivos = fs.readdirSync(PASTA_GAS).filter((f) => f.endsWith('.gs')).sort();
+  if (opcoes.ordemReversa) arquivos.reverse();
+
+  // Planilha que já existia antes do sistema novo (ver tests/backend/planilha-real.test.js).
+  if (opcoes.antesDaPlanilha) opcoes.antesDaPlanilha(planilha);
+
+  arquivos
     .forEach((arquivo) => {
       const codigo = fs.readFileSync(path.join(PASTA_GAS, arquivo), 'utf8');
       vm.runInContext(codigo, contexto, { filename: arquivo });
